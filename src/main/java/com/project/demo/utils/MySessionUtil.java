@@ -17,7 +17,11 @@ import java.util.Objects;
  */
 public final class MySessionUtil {
 
-    public static String USER_ACCOUNT = "account";
+    public static String USER_ID = "id: ";
+
+    static {
+        MySessionUtil.getSession().setAttribute(USER_ID, 1);
+    }
 
     /**
      * @author Zjp

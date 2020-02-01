@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.demo.dao.CourseDOMapper">
+    <resultMap id="BaseResultMap" type="com.project.demo.DO.CourseDO">
+        <id column="course_id" jdbcType="INTEGER" property="courseId"/>
+        <result column="course_name" jdbcType="VARCHAR" property="courseName"/>
+        <result column="course_deadline" jdbcType="DATE" property="courseDeadline"/>
+        <result column="author_id" jdbcType="INTEGER" property="authorId"/>
+        <result column="schedule" jdbcType="INTEGER" property="schedule"/>
+        <result column="completed" jdbcType="INTEGER" property="completed"/>
+    </resultMap>
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.project.demo.DO.CourseDO">
+        <result column="course_desc" jdbcType="LONGVARCHAR" property="courseDesc"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    course_id, course_name, course_deadline, author_id, schedule, completed
+  </sql>
+    <sql id="Blob_Column_List">
+    course_desc
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from course
+        where course_id = #{courseId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from course
+    where course_id = #{courseId,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.project.demo.DO.CourseDO">
+    insert into course (course_id, course_name, course_deadline, 
+      author_id, schedule, completed, 
+      course_desc)
+    values (#{courseId,jdbcType=INTEGER}, #{courseName,jdbcType=VARCHAR}, #{courseDeadline,jdbcType=DATE}, 
+      #{authorId,jdbcType=INTEGER}, #{schedule,jdbcType=INTEGER}, #{completed,jdbcType=INTEGER}, 
+      #{courseDesc,jdbcType=LONGVARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.project.demo.DO.CourseDO">
+        insert into course
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="courseId != null">
+                course_id,
+            </if>
+            <if test="courseName != null">
+                course_name,
+            </if>
+            <if test="courseDeadline != null">
+                course_deadline,
+            </if>
+            <if test="authorId != null">
+                author_id,
+            </if>
+            <if test="schedule != null">
+                schedule,
+            </if>
+            <if test="completed != null">
+                completed,
+            </if>
+            <if test="courseDesc != null">
+                course_desc,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="courseId != null">
+                #{courseId,jdbcType=INTEGER},
+            </if>
+            <if test="courseName != null">
+                #{courseName,jdbcType=VARCHAR},
+            </if>
+            <if test="courseDeadline != null">
+                #{courseDeadline,jdbcType=DATE},
+            </if>
+            <if test="authorId != null">
+                #{authorId,jdbcType=INTEGER},
+            </if>
+            <if test="schedule != null">
+                #{schedule,jdbcType=INTEGER},
+            </if>
+            <if test="completed != null">
+                #{completed,jdbcType=INTEGER},
+            </if>
+            <if test="courseDesc != null">
+                #{courseDesc,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.project.demo.DO.CourseDO">
+        update course
+        <set>
+            <if test="courseName != null">
+                course_name = #{courseName,jdbcType=VARCHAR},
+            </if>
+            <if test="courseDeadline != null">
+                course_deadline = #{courseDeadline,jdbcType=DATE},
+            </if>
+            <if test="authorId != null">
+                author_id = #{authorId,jdbcType=INTEGER},
+            </if>
+            <if test="schedule != null">
+                schedule = #{schedule,jdbcType=INTEGER},
+            </if>
+            <if test="completed != null">
+                completed = #{completed,jdbcType=INTEGER},
+            </if>
+            <if test="courseDesc != null">
+                course_desc = #{courseDesc,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where course_id = #{courseId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.project.demo.DO.CourseDO">
+    update course
+    set course_name = #{courseName,jdbcType=VARCHAR},
+      course_deadline = #{courseDeadline,jdbcType=DATE},
+      author_id = #{authorId,jdbcType=INTEGER},
+      schedule = #{schedule,jdbcType=INTEGER},
+      completed = #{completed,jdbcType=INTEGER},
+      course_desc = #{courseDesc,jdbcType=LONGVARCHAR}
+    where course_id = #{courseId,jdbcType=INTEGER}
+  </update>
+    <update id="updateByPrimaryKey" parameterType="com.project.demo.DO.CourseDO">
+    update course
+    set course_name = #{courseName,jdbcType=VARCHAR},
+      course_deadline = #{courseDeadline,jdbcType=DATE},
+      author_id = #{authorId,jdbcType=INTEGER},
+      schedule = #{schedule,jdbcType=INTEGER},
+      completed = #{completed,jdbcType=INTEGER}
+    where course_id = #{courseId,jdbcType=INTEGER}
+  </update>
+
+    <select id="getCourseList" resultType="com.project.demo.VO.CourseVO">
+    select course_id, course_name, course_deadline, author_id, CONVERT(completed/schedule,DECIMAL(10,2)) as progress,course_desc
+    from course
+    where author_id=#{userId,jdbcType=INTEGER}
+  </select>
+    <insert id="createCourse">
+        insert into course (course_name,course_deadline,author_id,course_desc)
+        values (#{courseDO.courseName,jdbcType=VARCHAR},
+                #{courseDO.courseDeadline,jdbcType=TIMESTAMP},
+                #{courseDO.authorId,jdbcType=INTEGER},
+                #{courseDO.courseDesc,jdbcType=VARCHAR});
+    </insert>
+    <delete id="deleteCourse">
+        delete from course
+        where course_id=#{courseId,jdbcType=INTEGER}
+    </delete>
+    <select id="searchCourseList" parameterType="java.lang.String" resultType="com.project.demo.VO.CourseVO">
+        select course_id, course_name, course_deadline, author_id, CONVERT(completed/schedule,DECIMAL(10,2)) as progress,course_desc
+        from course c
+        where  locate(#{searchKey,jdbcType=VARCHAR},course_name)>0||
+               locate(#{searchKey,jdbcType=VARCHAR},course_desc)>0
+    </select>
+
+
+</mapper>

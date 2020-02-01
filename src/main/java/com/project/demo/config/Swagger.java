@@ -20,7 +20,7 @@ public class Swagger {
                 .apiInfo(new ApiInfoBuilder()
                         .title("API list and test")
                         .description("优食派-API文档")
-                        .termsOfServiceUrl("http://localhost:8088/swagger-ui.html")
+                        .termsOfServiceUrl("http://localhost:8080/swagger-ui.html")
                         .version("1.0.0")
                         .build())
                 .select()
