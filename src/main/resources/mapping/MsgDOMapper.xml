@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.demo.dao.MsgDOMapper">
+    <resultMap id="BaseResultMap" type="com.project.demo.DO.MsgDO">
+        <id column="msg_id" jdbcType="INTEGER" property="msgId"/>
+        <result column="parent_id" jdbcType="INTEGER" property="parentId"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="author_id" jdbcType="INTEGER" property="authorId"/>
+        <result column="to_id" jdbcType="INTEGER" property="toId"/>
+        <result column="post_date" jdbcType="TIMESTAMP" property="postDate"/>
+    </resultMap>
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.project.demo.DO.MsgDO">
+        <result column="content" jdbcType="LONGVARCHAR" property="content"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    msg_id, parent_id, status, author_id, to_id, post_date
+  </sql>
+    <sql id="Blob_Column_List">
+    content
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from msg
+        where msg_id = #{msgId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from msg
+    where msg_id = #{msgId,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.project.demo.DO.MsgDO">
+    insert into msg (msg_id, parent_id, status, 
+      author_id, to_id, post_date, 
+      content)
+    values (#{msgId,jdbcType=INTEGER}, #{parentId,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, 
+      #{authorId,jdbcType=INTEGER}, #{toId,jdbcType=INTEGER}, #{postDate,jdbcType=TIMESTAMP}, 
+      #{content,jdbcType=LONGVARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.project.demo.DO.MsgDO">
+        insert into msg
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="msgId != null">
+                msg_id,
+            </if>
+            <if test="parentId != null">
+                parent_id,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="authorId != null">
+                author_id,
+            </if>
+            <if test="toId != null">
+                to_id,
+            </if>
+            <if test="postDate != null">
+                post_date,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="msgId != null">
+                #{msgId,jdbcType=INTEGER},
+            </if>
+            <if test="parentId != null">
+                #{parentId,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+            <if test="authorId != null">
+                #{authorId,jdbcType=INTEGER},
+            </if>
+            <if test="toId != null">
+                #{toId,jdbcType=INTEGER},
+            </if>
+            <if test="postDate != null">
+                #{postDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.project.demo.DO.MsgDO">
+        update msg
+        <set>
+            <if test="parentId != null">
+                parent_id = #{parentId,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=TINYINT},
+            </if>
+            <if test="authorId != null">
+                author_id = #{authorId,jdbcType=INTEGER},
+            </if>
+            <if test="toId != null">
+                to_id = #{toId,jdbcType=INTEGER},
+            </if>
+            <if test="postDate != null">
+                post_date = #{postDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where msg_id = #{msgId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.project.demo.DO.MsgDO">
+    update msg
+    set parent_id = #{parentId,jdbcType=INTEGER},
+      status = #{status,jdbcType=TINYINT},
+      author_id = #{authorId,jdbcType=INTEGER},
+      to_id = #{toId,jdbcType=INTEGER},
+      post_date = #{postDate,jdbcType=TIMESTAMP},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where msg_id = #{msgId,jdbcType=INTEGER}
+  </update>
+    <update id="updateByPrimaryKey" parameterType="com.project.demo.DO.MsgDO">
+    update msg
+    set parent_id = #{parentId,jdbcType=INTEGER},
+      status = #{status,jdbcType=TINYINT},
+      author_id = #{authorId,jdbcType=INTEGER},
+      to_id = #{toId,jdbcType=INTEGER},
+      post_date = #{postDate,jdbcType=TIMESTAMP}
+    where msg_id = #{msgId,jdbcType=INTEGER}
+  </update>
+
+    <insert id="writeMsg">
+        insert into msg
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="parentId != null">
+                parent_id,
+            </if>
+            <if test="authorId != null">
+                author_id,
+            </if>
+            <if test="toId != null">
+                to_id,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="parentId != null">
+                #{parentId,jdbcType=INTEGER},
+            </if>
+            <if test="authorId != null">
+                #{authorId,jdbcType=INTEGER},
+            </if>
+            <if test="toId != null">
+                #{toId,jdbcType=INTEGER},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="getMassageListForSelf" resultType="com.project.demo.DO.MsgDO">
+        select *
+        from msg
+        where to_id=#{userId,jdbcType=INTEGER}
+        and status=#{status,jdbcType=TINYINT}
+    </select>
+
+    <select id="getMyWriteToList" resultType="com.project.demo.DO.MsgDO">
+        select *
+        from msg
+        where author_id=#{myId,jdbcType=INTEGER}
+    </select>
+</mapper>
