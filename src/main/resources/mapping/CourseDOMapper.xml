@@ -137,11 +137,12 @@
     where author_id=#{userId,jdbcType=INTEGER}
   </select>
     <insert id="createCourse">
-        insert into course (course_name,course_deadline,author_id,course_desc)
+        insert into course (course_name,course_deadline,author_id,course_desc,schedule)
         values (#{courseDO.courseName,jdbcType=VARCHAR},
                 #{courseDO.courseDeadline,jdbcType=TIMESTAMP},
                 #{courseDO.authorId,jdbcType=INTEGER},
-                #{courseDO.courseDesc,jdbcType=VARCHAR});
+                #{courseDO.courseDesc,jdbcType=VARCHAR},
+                #{courseDO.schedule,jdbcType=INTEGER});
     </insert>
     <delete id="deleteCourse">
         delete from course

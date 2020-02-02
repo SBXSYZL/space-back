@@ -1,15 +1,16 @@
-package com.project.demo.DO;
+package com.project.demo.VO;
 
-public class UserDO {
+/**
+ * @description:
+ * @author: YZL
+ * @time: 2020/2/2 20:28
+ */
+public class UserVO {
     private Integer userId;
 
     private String nickName;
 
-    private Byte authority;
-
     private String account;
-
-    private String password;
 
     private String tel;
 
@@ -26,15 +27,7 @@ public class UserDO {
     }
 
     public void setNickName(String nickName) {
-        this.nickName = nickName == null ? null : nickName.trim();
-    }
-
-    public Byte getAuthority() {
-        return authority;
-    }
-
-    public void setAuthority(Byte authority) {
-        this.authority = authority;
+        this.nickName = nickName;
     }
 
     public String getAccount() {
@@ -42,15 +35,7 @@ public class UserDO {
     }
 
     public void setAccount(String account) {
-        this.account = account == null ? null : account.trim();
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password == null ? null : password.trim();
+        this.account = account;
     }
 
     public String getTel() {

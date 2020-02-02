@@ -19,6 +19,7 @@ public enum EmBusinessErr implements CommonError {
     USER_REGISTERED_ERROR(2004, "用户注册失败"),
     USER_ACCOUNT_EXISTS_ALREADY(2005, "该账号已存在"),
     USER_LIST_GET_ERROR(2006, "用户列表获取失败"),
+    SEARCH_USER_ERROR(2007, "搜索用户失败"),
     //excel文件错误
     EXCEL_FORMAT_ERROR(4001, "Excel文件格式错误"),
     PHONENUMBER_FORMAT_ERROR(4002, "手机号格式错误"),
@@ -39,7 +40,11 @@ public enum EmBusinessErr implements CommonError {
     CREATE_COURSE_ERROR(7003, "创建课程失败"),
     DELETE_COURSE_ERROR(7004, "删除课程失败"),
     GET_ELECTIVE_LIST_ERROR(7005, "获取选中该课程学生列表失败"),
-    SEARCH_COURSE_ERROR(7006, "搜索课程出错");
+    SEARCH_COURSE_ERROR(7006, "搜索课程出错"),
+
+    //消息相关
+    POST_MSG_ERROR(8001, "发送消息失败"),
+    GET_MSG_LIST_ERROR(8002, "获取消息列表失败");
 //
 
 

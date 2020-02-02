@@ -21,7 +21,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void studentRegistered(String nickName, String account, String password) throws BusinessException {
-        TeacherServiceImpl.registered(nickName, account, password, userDOMapper, (byte) 0);
+    public void studentRegistered(String nickName, String account, String password, String tel) throws BusinessException {
+        TeacherServiceImpl.registered(nickName, account, password, userDOMapper, tel, (byte) 0);
     }
 }

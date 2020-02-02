@@ -31,8 +31,9 @@ public class StudentController extends BaseController {
     @PostMapping("/studentRegistered")
     public CommonReturnType studentRegistered(@RequestParam String nickName,
                                               @RequestParam String account,
-                                              @RequestParam String password) throws BusinessException {
-        studentService.studentRegistered(nickName, account, password);
+                                              @RequestParam String password,
+                                              @RequestParam String tel) throws BusinessException {
+        studentService.studentRegistered(nickName, account, password,tel);
         return CommonReturnType.create(RTStr.SUCCESS);
     }
 

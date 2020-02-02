@@ -44,6 +44,7 @@ public class TestUtil {
     @Autowired
     RedisTemplate redisTemplate;
 
+
     @Test
     public void test() {
         template.opsForValue().set("123", "456", Duration.ofSeconds(30));

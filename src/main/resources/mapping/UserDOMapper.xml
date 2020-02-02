@@ -7,9 +7,10 @@
         <result column="authority" jdbcType="TINYINT" property="authority"/>
         <result column="account" jdbcType="VARCHAR" property="account"/>
         <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="tel" jdbcType="VARCHAR" property="tel"/>
     </resultMap>
     <sql id="Base_Column_List">
-    user_id, nick_name, authority, account, password
+    user_id, nick_name, authority, account, password,tel
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select
@@ -97,7 +98,20 @@
     where account=#{account,jdbcType=VARCHAR}
   </select>
     <insert id="studentRegistered" parameterType="com.project.demo.DO.UserDO">
-    insert into user(nick_name,account,password,authority)
-    values(#{nickName,jdbcType=VARCHAR},#{account,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR},#{authority,jdbcType=TINYINT})
+    insert into user(nick_name,account,password,authority,tel)
+    values(
+        #{nickName,jdbcType=VARCHAR},
+        #{account,jdbcType=VARCHAR},
+        #{password,jdbcType=VARCHAR},
+        #{authority,jdbcType=TINYINT},
+        #{tel,jdbcType=VARCHAR})
   </insert>
+
+    <select id="searchUser" resultType="com.project.demo.VO.UserVO">
+        select user_id, nick_name, account,tel
+        from user
+        where locate(#{searchKey,jdbcType=VARCHAR},nick_name)>0||
+            locate(#{searchKey,jdbcType=VARCHAR},account)>0||
+            locate(#{searchKey,jdbcType=VARCHAR},tel)>0
+    </select>
 </mapper>

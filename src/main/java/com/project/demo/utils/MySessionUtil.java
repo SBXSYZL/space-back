@@ -20,7 +20,7 @@ public final class MySessionUtil {
     public static String USER_ID = "id: ";
 
     static {
-        MySessionUtil.getSession().setAttribute(USER_ID, 1);
+        MySessionUtil.getSession().setAttribute(USER_ID, 8);
     }
 
     /**

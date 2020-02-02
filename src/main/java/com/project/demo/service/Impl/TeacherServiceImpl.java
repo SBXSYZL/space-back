@@ -4,13 +4,12 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.project.demo.DO.CourseDO;
 import com.project.demo.DO.LessonDO;
+import com.project.demo.DO.MsgDO;
 import com.project.demo.DO.UserDO;
 import com.project.demo.VO.CourseVO;
 import com.project.demo.VO.ElectiveVO;
-import com.project.demo.dao.CourseDOMapper;
-import com.project.demo.dao.ElectiveDOMapper;
-import com.project.demo.dao.LessonDOMapper;
-import com.project.demo.dao.UserDOMapper;
+import com.project.demo.VO.UserVO;
+import com.project.demo.dao.*;
 import com.project.demo.error.BusinessException;
 import com.project.demo.error.EmBusinessErr;
 import com.project.demo.service.TeacherService;
@@ -39,6 +38,9 @@ public class TeacherServiceImpl implements TeacherService {
     @Autowired
     ElectiveDOMapper electiveDOMapper;
 
+    @Autowired
+    MsgDOMapper msgDOMapper;
+
     @Override
     public void teacherLogin(String account, String password) throws BusinessException {
         login(account, password, userDOMapper, (byte) 1);
@@ -66,16 +68,17 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public void teacherRegistered(String nickName, String account, String password) throws BusinessException {
-        registered(nickName, account, password, userDOMapper, (byte) 1);
+    public void teacherRegistered(String nickName, String account, String password, String tel) throws BusinessException {
+        registered(nickName, account, password, userDOMapper, tel, (byte) 1);
     }
 
-    protected static void registered(String nickName, String account, String password, UserDOMapper userDOMapper, Byte authority) throws BusinessException {
+    protected static void registered(String nickName, String account, String password, UserDOMapper userDOMapper, String tel, Byte authority) throws BusinessException {
         try {
             UserDO userDO = new UserDO();
             userDO.setNickName(nickName);
             userDO.setAccount(account);
             userDO.setPassword(MD5Util.getMD5(password));
+            userDO.setTel(tel);
             userDO.setAuthority(authority);
             userDOMapper.studentRegistered(userDO);
         } catch (Exception e) {
@@ -109,13 +112,14 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public void createCourse(String courseName, Date deadline, String courseDescription) throws BusinessException {
+    public void createCourse(String courseName, Date deadline, Integer schedule, String courseDescription) throws BusinessException {
         try {
             CourseDO courseDO = new CourseDO();
             Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
             courseDO.setAuthorId(userId);
             courseDO.setCourseName(courseName);
             courseDO.setCourseDeadline(deadline);
+            courseDO.setSchedule(schedule);
             courseDO.setCourseDesc(courseDescription);
             courseDOMapper.createCourse(courseDO);
         } catch (Exception e) {
@@ -152,6 +156,58 @@ public class TeacherServiceImpl implements TeacherService {
             return PageUtil.getListWithPageInfo(courseVOS, page);
         } catch (Exception e) {
             throw new BusinessException(EmBusinessErr.SEARCH_COURSE_ERROR);
+        }
+    }
+
+    @Override
+    public void writeMsg(Integer parentId, String content, Integer toId) throws BusinessException {
+        try {
+            Integer authorId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
+            MsgDO msgDO = new MsgDO();
+            if (parentId != null) {
+                msgDO.setParentId(parentId);
+            }
+            msgDO.setAuthorId(authorId);
+            msgDO.setContent(content);
+            msgDO.setToId(toId);
+            msgDOMapper.writeMsg(msgDO);
+        } catch (Exception e) {
+            throw new BusinessException(EmBusinessErr.POST_MSG_ERROR);
+        }
+    }
+
+    @Override
+    public Map getMassageListForSelf(Byte status, Integer pageNo, Integer pageSize) throws BusinessException {
+        try {
+            Integer selfId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
+            Page page = PageHelper.startPage(pageNo, pageSize);
+            List<MsgDO> massageListForSelf = msgDOMapper.getMassageListForSelf(selfId, status);
+            return PageUtil.getListWithPageInfo(massageListForSelf, page);
+        } catch (Exception e) {
+            throw new BusinessException(EmBusinessErr.GET_MSG_LIST_ERROR);
+        }
+    }
+
+    @Override
+    public Map getMyWriteToList(Integer pageNo, Integer pageSize) throws BusinessException {
+        try {
+            Integer selfId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
+            Page page = PageHelper.startPage(pageNo, pageSize);
+            List<MsgDO> myWriteToList = msgDOMapper.getMyWriteToList(selfId);
+            return PageUtil.getListWithPageInfo(myWriteToList, page);
+        } catch (Exception e) {
+            throw new BusinessException(EmBusinessErr.GET_MSG_LIST_ERROR);
+        }
+    }
+
+    @Override
+    public Map searchUsers(String searchKey, Integer pageNo, Integer pageSize) throws BusinessException {
+        try {
+            Page page = PageHelper.startPage(pageNo, pageSize);
+            List<UserVO> userVOS = userDOMapper.searchUser(searchKey);
+            return PageUtil.getListWithPageInfo(userVOS, page);
+        } catch (Exception e) {
+            throw new BusinessException(EmBusinessErr.SEARCH_USER_ERROR);
         }
     }
 }

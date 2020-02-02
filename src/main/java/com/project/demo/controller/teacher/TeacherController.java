@@ -32,13 +32,15 @@ public class TeacherController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "nickName", value = "昵称"),
             @ApiImplicitParam(name = "account", value = "账号"),
-            @ApiImplicitParam(name = "password", value = "密码")
+            @ApiImplicitParam(name = "password", value = "密码"),
+            @ApiImplicitParam(name = "tel", value = "联系方式")
     })
     @PostMapping("/teacherRegistered")
     public CommonReturnType teacherRegistered(@RequestParam String nickName,
                                               @RequestParam String account,
-                                              @RequestParam String password) throws BusinessException {
-        teacherService.teacherRegistered(nickName, account, password);
+                                              @RequestParam String password,
+                                              @RequestParam String tel) throws BusinessException {
+        teacherService.teacherRegistered(nickName, account, password, tel);
         return CommonReturnType.create(RTStr.SUCCESS);
     }
 
@@ -91,12 +93,14 @@ public class TeacherController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "courseName", value = "课程名"),
             @ApiImplicitParam(name = "deadline", value = "截止日期"),
+            @ApiImplicitParam(name = "schedule", value = "课时数量"),
             @ApiImplicitParam(name = "courseDescription", value = "课程描述")
     })
     public CommonReturnType createCourse(@RequestParam String courseName,
                                          @RequestParam Date deadline,
+                                         @RequestParam Integer schedule,
                                          @RequestParam String courseDescription) throws BusinessException {
-        teacherService.createCourse(courseName, deadline, courseDescription);
+        teacherService.createCourse(courseName, deadline, schedule, courseDescription);
         return CommonReturnType.create(RTStr.SUCCESS);
     }
 
@@ -132,37 +136,100 @@ public class TeacherController extends BaseController {
         return CommonReturnType.create(map);
     }
 
-    @GetMapping("deleteFile")
-    public CommonReturnType deleteFile(@RequestParam String fileName,
-                                       @RequestParam(required = false) String dir) throws BusinessException {
-        if (dir != null) {
-            FileUtil.deleteFile(fileName, dir);
-        } else {
-            FileUtil.deleteFile(fileName);
-        }
+//    @GetMapping("deleteFile")
+//    public CommonReturnType deleteFile(@RequestParam String fileName,
+//                                       @RequestParam(required = false) String dir) throws BusinessException {
+//        if (dir != null) {
+//            FileUtil.deleteFile(fileName, dir);
+//        } else {
+//            FileUtil.deleteFile(fileName);
+//        }
+//
+//        return CommonReturnType.create(RTStr.SUCCESS);
+//    }
+//
+//    @PostMapping("/submitWork")
+//    public CommonReturnType submitWork(@RequestParam("file") MultipartFile file,
+//                                       @RequestParam(required = false) String dir) throws BusinessException {
+//        if (file.isEmpty()) {
+//            throw new BusinessException(EmBusinessErr.FILE_UPLOAD_ERROR);
+//        } else {
+//            String fileName = null;
+//            if (dir != null) {
+//                fileName = FileUtil.saveFile(file, dir);
+//            } else {
+//                fileName = FileUtil.saveFile(file);
+//            }
+//
+//            return CommonReturnType.create(fileName + " submit success");
+//        }
+//    }
+//
+//    @GetMapping("/downloadFile")
+//    public ResponseEntity<Resource> downloadFile(@RequestParam String fileName) throws BusinessException {
+//        return FileUtil.getFile(fileName);
+//    }
 
+
+    @ApiOperation("回复消息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "parentId", value = "被回复消息ID"),
+            @ApiImplicitParam(name = "content", value = "回复内容"),
+            @ApiImplicitParam(name = "toId", value = "被回复人ID")
+    })
+    @PostMapping("/replyMessage")
+    public CommonReturnType replyMessage(@RequestParam Integer parentId,
+                                         @RequestParam String content,
+                                         @RequestParam Integer toId) throws BusinessException {
+
+        teacherService.writeMsg(parentId, content, toId);
         return CommonReturnType.create(RTStr.SUCCESS);
     }
 
-    @PostMapping("/submitWork")
-    public CommonReturnType submitWork(@RequestParam("file") MultipartFile file,
-                                       @RequestParam(required = false) String dir) throws BusinessException {
-        if (file.isEmpty()) {
-            throw new BusinessException(EmBusinessErr.FILE_UPLOAD_ERROR);
-        } else {
-            String fileName = null;
-            if (dir != null) {
-                fileName = FileUtil.saveFile(file, dir);
-            } else {
-                fileName = FileUtil.saveFile(file);
-            }
-
-            return CommonReturnType.create(fileName + " submit success");
-        }
+    @ApiOperation("发送消息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "content", value = "消息内容"),
+            @ApiImplicitParam(name = "toId", value = "对方ID")
+    })
+    @PostMapping("/writeMessageTo")
+    public CommonReturnType writeMessageTo(@RequestParam String content,
+                                           @RequestParam Integer toId) throws BusinessException {
+        teacherService.writeMsg(null, content, toId);
+        return CommonReturnType.create(RTStr.SUCCESS);
     }
 
-    @GetMapping("/downloadFile")
-    public ResponseEntity<Resource> downloadFile(@RequestParam String fileName) throws BusinessException {
-        return FileUtil.getFile(fileName);
+    @ApiOperation("获取未读消息列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNo", value = "页码"),
+            @ApiImplicitParam(name = "pageSize", value = "数据量")
+    })
+    @GetMapping("/getUnreadMessageList")
+    public CommonReturnType getUnreadMessageList(@RequestParam Integer pageNo,
+                                                 @RequestParam Integer pageSize) throws BusinessException {
+        Map massageListForSelf = teacherService.getMassageListForSelf((byte) 0, pageNo, pageSize);
+        return CommonReturnType.create(massageListForSelf);
+    }
+
+    @ApiOperation("获取已读消息列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNo", value = "页码"),
+            @ApiImplicitParam(name = "pageSize", value = "数据量")
+    })
+    @GetMapping("/getHaveReadMessageList")
+    public CommonReturnType getHaveReadMessageList(@RequestParam Integer pageNo,
+                                                   @RequestParam Integer pageSize) throws BusinessException {
+        Map massageListForSelf = teacherService.getMassageListForSelf((byte) 1, pageNo, pageSize);
+        return CommonReturnType.create(massageListForSelf);
+    }
+
+
+    @ApiOperation("搜索联系人")
+    @ApiImplicitParam(name = "searchKey", value = "搜索关键字")
+    @GetMapping("/searchUser")
+    public CommonReturnType searchUser(@RequestParam String searchKey,
+                                       @RequestParam Integer pageNo,
+                                       @RequestParam Integer pageSize) throws BusinessException {
+        Map map = teacherService.searchUsers(searchKey, pageNo, pageSize);
+        return CommonReturnType.create(map);
     }
 }
