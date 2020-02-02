@@ -30,6 +30,8 @@ public enum EmBusinessErr implements CommonError {
     FILE_UPLOAD_ERROR(6001, "文件上传失败"),
     FILE_SAVE_ERROR(6002, "文件保存失败"),
     FILE_NOT_FOUND(6003, "找不到该文件"),
+    CREATE_DIR_ERROR(6004, "创建目录失败"),
+    DELETE_FILE_ERROR(6005, "删除文件失败"),
 
     //课程相关
     COURSE_LIST_GET_ERROR(7001, "课程列表获取失败"),

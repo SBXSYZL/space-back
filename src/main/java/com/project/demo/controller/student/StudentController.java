@@ -49,8 +49,8 @@ public class StudentController extends BaseController {
         if (file.isEmpty()) {
             throw new BusinessException(EmBusinessErr.FILE_UPLOAD_ERROR);
         } else {
-            FileUtil.saveFile(file);
-            return CommonReturnType.create(file.getOriginalFilename() + " submit success");
+            String fileName = FileUtil.saveFile(file);
+            return CommonReturnType.create(fileName + " submit success");
         }
     }
 

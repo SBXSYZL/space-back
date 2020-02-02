@@ -16,7 +16,7 @@
 
         <!-- 数据库连接配置：数据库地址和账号密码 -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://106.52.243.85/space"
+                        connectionURL="jdbc:mysql://120.26.56.122:3306/space"
                         userId="root"
                         password="spaceGroup">
         </jdbcConnection>

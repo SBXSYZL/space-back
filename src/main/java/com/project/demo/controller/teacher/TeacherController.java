@@ -2,14 +2,19 @@ package com.project.demo.controller.teacher;
 
 import com.project.demo.controller.BaseController;
 import com.project.demo.error.BusinessException;
+import com.project.demo.error.EmBusinessErr;
 import com.project.demo.response.CommonReturnType;
 import com.project.demo.response.RTStr;
 import com.project.demo.service.TeacherService;
+import com.project.demo.utils.FileUtil;
 import com.project.demo.utils.MySessionUtil;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.Map;
@@ -125,5 +130,39 @@ public class TeacherController extends BaseController {
                                          @RequestParam Integer pageSize) throws BusinessException {
         Map map = teacherService.searchCourseList(searchKey, pageNo, pageSize);
         return CommonReturnType.create(map);
+    }
+
+    @GetMapping("deleteFile")
+    public CommonReturnType deleteFile(@RequestParam String fileName,
+                                       @RequestParam(required = false) String dir) throws BusinessException {
+        if (dir != null) {
+            FileUtil.deleteFile(fileName, dir);
+        } else {
+            FileUtil.deleteFile(fileName);
+        }
+
+        return CommonReturnType.create(RTStr.SUCCESS);
+    }
+
+    @PostMapping("/submitWork")
+    public CommonReturnType submitWork(@RequestParam("file") MultipartFile file,
+                                       @RequestParam(required = false) String dir) throws BusinessException {
+        if (file.isEmpty()) {
+            throw new BusinessException(EmBusinessErr.FILE_UPLOAD_ERROR);
+        } else {
+            String fileName = null;
+            if (dir != null) {
+                fileName = FileUtil.saveFile(file, dir);
+            } else {
+                fileName = FileUtil.saveFile(file);
+            }
+
+            return CommonReturnType.create(fileName + " submit success");
+        }
+    }
+
+    @GetMapping("/downloadFile")
+    public ResponseEntity<Resource> downloadFile(@RequestParam String fileName) throws BusinessException {
+        return FileUtil.getFile(fileName);
     }
 }

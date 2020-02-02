@@ -53,8 +53,9 @@ public class TeacherServiceImpl implements TeacherService {
                         !userDO.getPassword().equals(MD5Util.getMD5(password))) {
                     throw new BusinessException(EmBusinessErr.USER_LOGIN_ERROR);
                 }
+            } else {
+                throw new BusinessException(EmBusinessErr.USER_NOT_EXISTS);
             }
-            throw new BusinessException(EmBusinessErr.USER_NOT_EXISTS);
         } catch (Exception e) {
             if (e instanceof BusinessException) {
                 throw (BusinessException) e;
