@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface StudentService {
-    void studentLogin(String account, String password) throws BusinessException;
+    String studentLogin(String account, String password) throws BusinessException;
 
-    void studentRegistered(String nickName, String account, String password,String tel) throws BusinessException;
+    void studentRegistered(String nickName, String account, String password, String tel) throws BusinessException;
 }

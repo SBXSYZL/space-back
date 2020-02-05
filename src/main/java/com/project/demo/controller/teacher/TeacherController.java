@@ -1,31 +1,40 @@
 package com.project.demo.controller.teacher;
 
+import com.project.demo.VO.FileVO;
 import com.project.demo.controller.BaseController;
 import com.project.demo.error.BusinessException;
 import com.project.demo.error.EmBusinessErr;
 import com.project.demo.response.CommonReturnType;
 import com.project.demo.response.RTStr;
+import com.project.demo.service.FileService;
 import com.project.demo.service.TeacherService;
 import com.project.demo.utils.FileUtil;
 import com.project.demo.utils.MySessionUtil;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import javafx.util.Pair;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/teacher")
 public class TeacherController extends BaseController {
     private final TeacherService teacherService;
+    private final FileService fileService;
 
-    public TeacherController(TeacherService teacherService) {
+    public TeacherController(TeacherService teacherService, FileService fileService) {
         this.teacherService = teacherService;
+        this.fileService = fileService;
     }
 
     @ApiOperation("教师账号注册")
@@ -53,8 +62,15 @@ public class TeacherController extends BaseController {
     })
     public CommonReturnType teacherLogin(@RequestParam String account,
                                          @RequestParam String password) throws BusinessException {
-        teacherService.teacherLogin(account, password);
-        return CommonReturnType.create(RTStr.SUCCESS);
+        String s = teacherService.teacherLogin(account, password);
+        return CommonReturnType.create(s);
+    }
+
+
+    @GetMapping("/teacherLogout")
+    @ApiOperation("教师登出")
+    public void teacherLogout() {
+        teacherService.teacherLogout();
     }
 
     @GetMapping("/getCourseList")
@@ -84,7 +100,7 @@ public class TeacherController extends BaseController {
     public CommonReturnType getLessonList(@RequestParam Integer courseId,
                                           @RequestParam Integer pageNo,
                                           @RequestParam Integer pageSize) throws BusinessException {
-        Map lessonList = teacherService.getLessonList(courseId, pageNo, pageSize);
+        Map lessonList = teacherService.getWorkList(courseId, pageNo, pageSize);
         return CommonReturnType.create(lessonList);
     }
 
@@ -136,39 +152,92 @@ public class TeacherController extends BaseController {
         return CommonReturnType.create(map);
     }
 
-//    @GetMapping("deleteFile")
-//    public CommonReturnType deleteFile(@RequestParam String fileName,
-//                                       @RequestParam(required = false) String dir) throws BusinessException {
-//        if (dir != null) {
-//            FileUtil.deleteFile(fileName, dir);
-//        } else {
-//            FileUtil.deleteFile(fileName);
-//        }
-//
-//        return CommonReturnType.create(RTStr.SUCCESS);
-//    }
-//
-//    @PostMapping("/submitWork")
-//    public CommonReturnType submitWork(@RequestParam("file") MultipartFile file,
-//                                       @RequestParam(required = false) String dir) throws BusinessException {
-//        if (file.isEmpty()) {
-//            throw new BusinessException(EmBusinessErr.FILE_UPLOAD_ERROR);
-//        } else {
-//            String fileName = null;
-//            if (dir != null) {
-//                fileName = FileUtil.saveFile(file, dir);
-//            } else {
-//                fileName = FileUtil.saveFile(file);
-//            }
-//
-//            return CommonReturnType.create(fileName + " submit success");
-//        }
-//    }
-//
-//    @GetMapping("/downloadFile")
-//    public ResponseEntity<Resource> downloadFile(@RequestParam String fileName) throws BusinessException {
-//        return FileUtil.getFile(fileName);
-//    }
+    @ApiOperation("删除文件")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "fileName", value = "文件名"),
+            @ApiImplicitParam(name = "dir", value = "文件所属目录")
+    })
+    @GetMapping("deleteFile")
+    public CommonReturnType deleteFile(@RequestParam String fileName,
+                                       @RequestParam(required = false) String dir) throws BusinessException {
+        if (dir != null) {
+            FileUtil.deleteFile(fileName, dir);
+        } else {
+            FileUtil.deleteFile(fileName);
+        }
+
+        return CommonReturnType.create(RTStr.SUCCESS);
+    }
+
+    @PostMapping("/uploadFile")
+    @ApiOperation("上传文件")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "dir", value = "要上传的文件目录，如 a/a"),
+            @ApiImplicitParam(name = "folderId", value = "要上传的目录ID")
+    })
+    @Transactional
+    public CommonReturnType submitWork(@RequestParam("file") MultipartFile file,
+                                       @RequestParam(required = false) String dir,
+                                       @RequestParam(required = false) Integer folderId) throws BusinessException {
+        if (file.isEmpty()) {
+            throw new BusinessException(EmBusinessErr.FILE_UPLOAD_ERROR);
+        } else {
+            String fileName = null;
+            Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
+            if (dir != null) {
+                dir = userId + "/" + dir;
+            } else {
+                dir = userId + "/";
+            }
+            fileName = FileUtil.saveFile(file, dir);
+            if (folderId == null) folderId = 0;
+            fileName = fileName;
+            fileService.uploadFile(fileName, folderId, userId);
+            return CommonReturnType.create(RTStr.SUCCESS);
+        }
+    }
+
+    @ApiOperation("下载文件")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "path", value = "文件路径（若有目录需要一起组成字符串传入，如 a/1.jpg ）")
+    })
+    @GetMapping("/downloadFile")
+    public ResponseEntity<Resource> downloadFile(@RequestParam String path) throws BusinessException {
+        Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
+        path = userId + "/" + path;
+//        System.out.println(path);
+        return FileUtil.getFile(path);
+    }
+
+
+    @ApiOperation("创建文件夹")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "path", value = "完整路径，如用户8在根目录下创建a目录，传入a,在a下创建目录b，传入a/b"),
+            @ApiImplicitParam(name = "parentFolderId", value = "父文件夹的ID"),
+            @ApiImplicitParam(name = "folderName", value = "文件夹名称")
+    })
+    @GetMapping("createDirs")
+    @Transactional
+    public CommonReturnType createDirs(@RequestParam String path,
+                                       @RequestParam Integer parentFolderId,
+                                       @RequestParam String folderName) throws BusinessException, IOException {
+        Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
+        path = userId + "/" + path;
+        System.out.println(path);
+        File file = FileUtil.createDirs(path);
+//        String url = file.getAbsolutePath();
+//        int index = url.indexOf("\\static\\upload\\");
+//        fileService.createFolder(url.substring(index + 15).replace('\\', '/'), parentFolderId);
+        fileService.createFolder(folderName, parentFolderId);
+        return CommonReturnType.create(RTStr.SUCCESS);
+    }
+
+    @GetMapping("/getFilesUnderFolderId")
+    public CommonReturnType getFilesUnderFolderId(@RequestParam Integer folderId) throws BusinessException {
+        Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
+        List<FileVO> files = fileService.getFilesUnderFolderId(folderId, userId);
+        return CommonReturnType.create(files);
+    }
 
 
     @ApiOperation("回复消息")

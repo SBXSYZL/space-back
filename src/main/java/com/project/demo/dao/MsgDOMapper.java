@@ -1,6 +1,7 @@
 package com.project.demo.dao;
 
 import com.project.demo.DO.MsgDO;
+import com.project.demo.VO.MsgVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public interface MsgDOMapper {
 
     void writeMsg(MsgDO msgDO);
 
-    List<MsgDO> getMassageListForSelf(@Param("userId") Integer userId, @Param("status") Byte status);
+    List<MsgVO> getMassageListForSelf(@Param("userId") Integer userId, @Param("status") Byte status);
 
-    List<MsgDO> getMyWriteToList(@Param("myId") Integer myId);
+    List<MsgVO> getMyWriteToList(@Param("myId") Integer myId);
 }

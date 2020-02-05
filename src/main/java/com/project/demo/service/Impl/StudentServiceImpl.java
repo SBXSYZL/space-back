@@ -16,8 +16,8 @@ public class StudentServiceImpl implements StudentService {
     UserDOMapper userDOMapper;
 
     @Override
-    public void studentLogin(String account, String password) throws BusinessException {
-        TeacherServiceImpl.login(account, password, userDOMapper, (byte) 0);
+    public String studentLogin(String account, String password) throws BusinessException {
+        return TeacherServiceImpl.login(account, password, userDOMapper, (byte) 0);
     }
 
     @Override

@@ -9,13 +9,15 @@ import java.util.Map;
 
 @Service
 public interface TeacherService {
-    void teacherLogin(String account, String password) throws BusinessException;
+    String teacherLogin(String account, String password) throws BusinessException;
+
+    void teacherLogout();
 
     void teacherRegistered(String nickName, String account, String password, String tel) throws BusinessException;
 
     Map getCourseList(Integer userId, Integer pageNo, Integer pageSize) throws BusinessException;
 
-    Map getLessonList(Integer courseId, Integer pageNo, Integer pageSize) throws BusinessException;
+    Map getWorkList(Integer courseId, Integer pageNo, Integer pageSize) throws BusinessException;
 
     void createCourse(String courseName, Date deadline, Integer schedule, String courseDescription) throws BusinessException;
 

@@ -3,11 +3,12 @@ package com.project.demo.service.Impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.project.demo.DO.CourseDO;
-import com.project.demo.DO.LessonDO;
 import com.project.demo.DO.MsgDO;
 import com.project.demo.DO.UserDO;
+import com.project.demo.DO.WorkDO;
 import com.project.demo.VO.CourseVO;
 import com.project.demo.VO.ElectiveVO;
+import com.project.demo.VO.MsgVO;
 import com.project.demo.VO.UserVO;
 import com.project.demo.dao.*;
 import com.project.demo.error.BusinessException;
@@ -33,20 +34,17 @@ public class TeacherServiceImpl implements TeacherService {
     CourseDOMapper courseDOMapper;
 
     @Autowired
-    LessonDOMapper lessonDOMapper;
-
-    @Autowired
     ElectiveDOMapper electiveDOMapper;
 
     @Autowired
     MsgDOMapper msgDOMapper;
 
     @Override
-    public void teacherLogin(String account, String password) throws BusinessException {
-        login(account, password, userDOMapper, (byte) 1);
+    public String teacherLogin(String account, String password) throws BusinessException {
+        return login(account, password, userDOMapper, (byte) 1);
     }
 
-    protected static void login(String account, String password, UserDOMapper userDOMapper, Byte authority) throws BusinessException {
+    protected static String login(String account, String password, UserDOMapper userDOMapper, Byte authority) throws BusinessException {
         try {
             UserDO userDO = userDOMapper.selectByAccount(account);
             if (userDO != null) {
@@ -54,6 +52,9 @@ public class TeacherServiceImpl implements TeacherService {
                         !userDO.getAccount().equals(account) ||
                         !userDO.getPassword().equals(MD5Util.getMD5(password))) {
                     throw new BusinessException(EmBusinessErr.USER_LOGIN_ERROR);
+                } else {
+                    MySessionUtil.getSession().setAttribute(MySessionUtil.USER_ID, userDO.getUserId());
+                    return userDO.getNickName();
                 }
             } else {
                 throw new BusinessException(EmBusinessErr.USER_NOT_EXISTS);
@@ -65,6 +66,15 @@ public class TeacherServiceImpl implements TeacherService {
                 throw new BusinessException(EmBusinessErr.USER_NOT_EXISTS);
             }
         }
+    }
+
+    @Override
+    public void teacherLogout() {
+        logout();
+    }
+
+    protected static void logout() {
+        MySessionUtil.getSession().removeAttribute(MySessionUtil.USER_ID);
     }
 
     @Override
@@ -101,10 +111,11 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public Map getLessonList(Integer courseId, Integer pageNo, Integer pageSize) throws BusinessException {
+    public Map getWorkList(Integer courseId, Integer pageNo, Integer pageSize) throws BusinessException {
         try {
             Page page = PageHelper.startPage(pageNo, pageSize);
-            List<LessonDO> lessonList = lessonDOMapper.getLessonList(courseId);
+//            List<WorkDO> lessonList = lessonDOMapper.getLessonList(courseId);
+            List<WorkDO> lessonList = null;
             return PageUtil.getListWithPageInfo(lessonList, page);
         } catch (Exception e) {
             throw new BusinessException(EmBusinessErr.LESSON_LIST_GET_ERROR);
@@ -181,9 +192,10 @@ public class TeacherServiceImpl implements TeacherService {
         try {
             Integer selfId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
             Page page = PageHelper.startPage(pageNo, pageSize);
-            List<MsgDO> massageListForSelf = msgDOMapper.getMassageListForSelf(selfId, status);
+            List<MsgVO> massageListForSelf = msgDOMapper.getMassageListForSelf(selfId, status);
             return PageUtil.getListWithPageInfo(massageListForSelf, page);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BusinessException(EmBusinessErr.GET_MSG_LIST_ERROR);
         }
     }
@@ -193,7 +205,7 @@ public class TeacherServiceImpl implements TeacherService {
         try {
             Integer selfId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
             Page page = PageHelper.startPage(pageNo, pageSize);
-            List<MsgDO> myWriteToList = msgDOMapper.getMyWriteToList(selfId);
+            List<MsgVO> myWriteToList = msgDOMapper.getMyWriteToList(selfId);
             return PageUtil.getListWithPageInfo(myWriteToList, page);
         } catch (Exception e) {
             throw new BusinessException(EmBusinessErr.GET_MSG_LIST_ERROR);

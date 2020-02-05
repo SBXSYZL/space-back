@@ -27,11 +27,14 @@ public enum EmBusinessErr implements CommonError {
     CREATE_EXCEL_ERROR(4004, "生成Excel文件失败"),
     //文件目录错误
     ROOT_JAR_PATH_ERROR(5001, "根目录文件路径错误"),
+    CREATE_DIR_ERROR(5002, "创建目录失败"),
+    DIR_EXISTS_ERROR(5003, "文件目录已存在"),
     //文件操作相关
     FILE_UPLOAD_ERROR(6001, "文件上传失败"),
     FILE_SAVE_ERROR(6002, "文件保存失败"),
     FILE_NOT_FOUND(6003, "找不到该文件"),
-    CREATE_DIR_ERROR(6004, "创建目录失败"),
+    GET_FILES_UNDER_FOLDER_ID_ERROR(6004, "获取目录下文件失败"),
+
     DELETE_FILE_ERROR(6005, "删除文件失败"),
 
     //课程相关

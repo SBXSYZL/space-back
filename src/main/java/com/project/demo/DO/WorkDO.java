@@ -5,6 +5,8 @@ import java.util.Date;
 public class WorkDO {
     private Integer workId;
 
+    private Integer courseId;
+
     private String workName;
 
     private Date deadline;
@@ -12,8 +14,6 @@ public class WorkDO {
     private Integer submitCnt;
 
     private Integer authorId;
-
-    private Integer lessonId;
 
     private String workDesc;
 
@@ -23,6 +23,14 @@ public class WorkDO {
 
     public void setWorkId(Integer workId) {
         this.workId = workId;
+    }
+
+    public Integer getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(Integer courseId) {
+        this.courseId = courseId;
     }
 
     public String getWorkName() {
@@ -55,14 +63,6 @@ public class WorkDO {
 
     public void setAuthorId(Integer authorId) {
         this.authorId = authorId;
-    }
-
-    public Integer getLessonId() {
-        return lessonId;
-    }
-
-    public void setLessonId(Integer lessonId) {
-        this.lessonId = lessonId;
     }
 
     public String getWorkDesc() {

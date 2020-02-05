@@ -20,10 +20,10 @@ public class MyWebConfig implements WebMvcConfigurer {
 //    @Resource
 //    private AdminLoginInterceptor adminLoginInterceptor;
 
-    private final String[] userLoginPath = {"/user/**"};
-    //    private final String[] userLoginExcludePath = {"/user/login", "/user/register"};
-    private final String[] adminLoginPath = {"/admin/**"};
-    private final String[] adminLoginExcludePath = {"/admin/login"};
+    private final String[] userLoginPath = {"/student/**"};
+    private final String[] userLoginExcludePath = {"/student/studentLogin", "/student/studentRegistered"};
+    private final String[] adminLoginPath = {"/teacher/**"};
+    private final String[] adminLoginExcludePath = {"/teacher/teacherLogin", "/teacher/teacherRegistered"};
 
     /**
      * 拦截器注册
@@ -32,7 +32,7 @@ public class MyWebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
 
 //        注册日志信息
-//        registry.addInterceptor(logInterceptor).addPathPatterns("/**");
+        registry.addInterceptor(logInterceptor).addPathPatterns("/**");
 //        registry.addInterceptor(userLoginInterceptor).addPathPatterns(userLoginPath).excludePathPatterns(userLoginExcludePath);
 //        registry.addInterceptor(adminLoginInterceptor).addPathPatterns(adminLoginPath).excludePathPatterns(adminLoginExcludePath);
     }

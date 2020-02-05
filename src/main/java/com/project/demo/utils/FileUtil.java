@@ -3,6 +3,7 @@ package com.project.demo.utils;
 
 import com.project.demo.error.BusinessException;
 import com.project.demo.error.EmBusinessErr;
+import javafx.util.Pair;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -87,7 +88,11 @@ public class FileUtil {
                     ++index;
                     //创建文件
                     resultPath.delete(0, resultPath.toString().length());
-                    resultPath.append("static/upload/").append(fileName);
+                    resultPath.append("static/upload/");
+                    if (dir != null) {
+                        resultPath.append(dir).append("/");
+                    }
+                    resultPath.append(fileName);
                     upload = new File(path.getAbsolutePath(), resultPath.toString());
                 }
             }
@@ -116,11 +121,13 @@ public class FileUtil {
 //            }
             File path = createAbsoluteJarFile();
             File upload = new File(path.getAbsolutePath(), "static/upload/" + fileName);
+//            System.out.println(upload.getAbsolutePath());
             FileSystemResource resource = new FileSystemResource(upload.getAbsolutePath());
             String mediaTypeStr = URLConnection.getFileNameMap().getContentTypeFor(fileName);
             mediaTypeStr = (mediaTypeStr == null) ? MediaType.APPLICATION_OCTET_STREAM_VALUE : mediaTypeStr;
             MediaType mediaType = MediaType.parseMediaType(mediaTypeStr);
             HttpHeaders headers = new HttpHeaders();
+            fileName = upload.getName();
             String fileNames = new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
             headers.setContentDispositionFormData("attachment", fileNames);
             headers.setContentType(mediaType);
@@ -151,10 +158,16 @@ public class FileUtil {
             File file = new File(path.getAbsolutePath(), "static/upload/" + dir);
             if (!file.exists()) {
                 file.mkdirs();
+            } else {
+                throw new BusinessException(EmBusinessErr.DIR_EXISTS_ERROR);
             }
             return file;
         } catch (Exception e) {
-            throw new BusinessException(EmBusinessErr.CREATE_DIR_ERROR);
+            if (e instanceof BusinessException) {
+                throw new BusinessException(EmBusinessErr.DIR_EXISTS_ERROR);
+            } else {
+                throw new BusinessException(EmBusinessErr.CREATE_DIR_ERROR);
+            }
         }
 
     }
@@ -184,6 +197,13 @@ public class FileUtil {
     //删除文件
     public static void deleteFile(String fileName) throws BusinessException {
         deleteFile(fileName, null);
+    }
+
+
+    public static void saveFiles(Pair<MultipartFile, String>[] paths) throws BusinessException {
+        for (Pair<MultipartFile, String> path : paths) {
+            saveFile(path.getKey(), path.getValue());
+        }
     }
 
 }
