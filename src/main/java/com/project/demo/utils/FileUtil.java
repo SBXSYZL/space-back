@@ -206,4 +206,29 @@ public class FileUtil {
         }
     }
 
+    public static void deleteDir(String path) {
+        try {
+            File file = createAbsoluteJarFile();
+            File file1 = new File(file.getAbsolutePath(), "static/upload/" + path);
+            if (!file1.isFile()) {
+                String[] childFilePath = file1.list();
+                for (String childPath : childFilePath) {
+//                    File childFile = new File(file1.getAbsolutePath() + "/" + childPath);
+//                    deleteDir(childFile.getPath());
+                    deleteDir(path + "/" + childPath);
+                }
+            }
+            file1.delete();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+//    public static void main(String[] args) {
+//        deleteDir("space");
+//
+//    }
+
+
 }

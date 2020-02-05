@@ -154,18 +154,22 @@ public class TeacherController extends BaseController {
 
     @ApiOperation("删除文件")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "fileName", value = "文件名"),
-            @ApiImplicitParam(name = "dir", value = "文件所属目录")
+            @ApiImplicitParam(name = "fileName", value = "文件名,如 1.jpg"),
+            @ApiImplicitParam(name = "fileId", value = "文件ID"),
+            @ApiImplicitParam(name = "dir", value = "文件所属目录，如删除用户8目录下的a文件夹下的b文件夹的1.jpg: a/b ")
     })
     @GetMapping("deleteFile")
     public CommonReturnType deleteFile(@RequestParam String fileName,
+                                       @RequestParam Integer fileId,
                                        @RequestParam(required = false) String dir) throws BusinessException {
+        Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
         if (dir != null) {
-            FileUtil.deleteFile(fileName, dir);
+            dir = userId + "/" + dir;
         } else {
-            FileUtil.deleteFile(fileName);
+            dir = userId + "/";
         }
-
+        FileUtil.deleteFile(fileName, dir);
+        fileService.deleteFile(fileId);
         return CommonReturnType.create(RTStr.SUCCESS);
     }
 
@@ -231,6 +235,30 @@ public class TeacherController extends BaseController {
         fileService.createFolder(folderName, parentFolderId);
         return CommonReturnType.create(RTStr.SUCCESS);
     }
+
+
+    @ApiOperation("删除文件夹")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "folderId", value = "文件夹ID"),
+            @ApiImplicitParam(name = "path", value = "文件夹完整路径，如删除用户8目录下的a目录下的b目录： a/b")
+    })
+    @GetMapping("/deleteDir")
+    public CommonReturnType deleteDir(@RequestParam Integer folderId,
+                                      @RequestParam String path) throws BusinessException {
+        fileService.deleteDir(folderId);
+        Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
+        if (path != null) {
+            path = userId + "/" + path;
+        } else {
+            path = userId + "/";
+        }
+
+//        System.out.println("---------------------------------------------------------------------");
+//        System.out.println(path);
+        FileUtil.deleteDir(path);
+        return CommonReturnType.create(RTStr.SUCCESS);
+    }
+
 
     @GetMapping("/getFilesUnderFolderId")
     public CommonReturnType getFilesUnderFolderId(@RequestParam Integer folderId) throws BusinessException {

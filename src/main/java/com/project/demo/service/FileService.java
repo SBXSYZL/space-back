@@ -17,7 +17,11 @@ public interface FileService {
 
     void createFolder(String path, Integer parentFolderId) throws BusinessException;
 
-    void uploadFile(String fileName, Integer folderId,Integer userId) throws BusinessException;
+    void uploadFile(String fileName, Integer folderId, Integer userId) throws BusinessException;
 
     List getFilesUnderFolderId(Integer folderId, Integer userId) throws BusinessException;
+
+    void deleteDir(Integer folderId) throws BusinessException;
+
+    void deleteFile(Integer fileId) throws BusinessException;
 }

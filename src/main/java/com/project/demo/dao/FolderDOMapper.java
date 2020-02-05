@@ -22,4 +22,6 @@ public interface FolderDOMapper {
     void createFolder(@Param("path") String path, @Param("userId") Integer userId, @Param("parentFolderId") Integer parentFolderId);
 
     List<FileVO> getFilesUnderFolderId(@Param("userId") Integer userId, @Param("folderId") Integer folderId);
+
+    void deleteDir(@Param("folderId") Integer folderId);
 }

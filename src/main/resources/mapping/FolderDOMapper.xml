@@ -73,4 +73,8 @@
         where author_id=#{userId,jdbcType=INTEGER}
         and parent_folder_id=#{folderId,jdbcType=INTEGER}
     </select>
+    <delete id="deleteDir">
+        delete from folder
+        where folder_id=#{folderId,jdbcType=INTEGER}
+    </delete>
 </mapper>

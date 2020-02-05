@@ -63,4 +63,24 @@ public class FileServiceImpl implements FileService {
             throw new BusinessException(EmBusinessErr.GET_FILES_UNDER_FOLDER_ID_ERROR);
         }
     }
+
+    @Override
+    @Transactional
+    public void deleteDir(Integer folderId) throws BusinessException {
+        try {
+            folderDOMapper.deleteDir(folderId);
+        } catch (Exception e) {
+            throw new BusinessException(EmBusinessErr.DIR_DELETE_ERROR);
+        }
+    }
+
+    @Override
+    public void deleteFile(Integer fileId) throws BusinessException {
+        try {
+            fileDOMapper.deleteFile(fileId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(EmBusinessErr.FILE_DELETE_ERROR);
+        }
+    }
 }

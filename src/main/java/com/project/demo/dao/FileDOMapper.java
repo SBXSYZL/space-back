@@ -23,4 +23,6 @@ public interface FileDOMapper {
     List<FileVO> getFilesUnderFolderId(@Param("userId") Integer userId, @Param("folderId") Integer folderId);
 
     void uploadFile(@Param("userId") Integer userId, @Param("fileName") String fileName, @Param("folderId") Integer folderId);
+
+    void deleteFile(Integer fileId);
 }

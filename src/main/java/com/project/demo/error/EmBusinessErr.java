@@ -29,11 +29,13 @@ public enum EmBusinessErr implements CommonError {
     ROOT_JAR_PATH_ERROR(5001, "根目录文件路径错误"),
     CREATE_DIR_ERROR(5002, "创建目录失败"),
     DIR_EXISTS_ERROR(5003, "文件目录已存在"),
+    DIR_DELETE_ERROR(5004, "文件目录删除失败"),
     //文件操作相关
     FILE_UPLOAD_ERROR(6001, "文件上传失败"),
     FILE_SAVE_ERROR(6002, "文件保存失败"),
     FILE_NOT_FOUND(6003, "找不到该文件"),
     GET_FILES_UNDER_FOLDER_ID_ERROR(6004, "获取目录下文件失败"),
+    FILE_DELETE_ERROR(6005, "删除文件失败"),
 
     DELETE_FILE_ERROR(6005, "删除文件失败"),
 

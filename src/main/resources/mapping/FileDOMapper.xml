@@ -91,4 +91,9 @@
         insert into files(folder_id, file_name, author_id)
         values(#{folderId,jdbcType=INTEGER},#{fileName,jdbcType=VARCHAR},#{userId,jdbcType=INTEGER})
     </insert>
+    <delete id="deleteFile">
+        delete from files
+        where file_id=#{fileId,jdbcType=INTEGER}
+    </delete>
+
 </mapper>
