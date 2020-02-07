@@ -6,6 +6,7 @@ import com.project.demo.error.BusinessException;
 import com.project.demo.error.EmBusinessErr;
 import com.project.demo.response.CommonReturnType;
 import com.project.demo.response.RTStr;
+import com.project.demo.service.CourseService;
 import com.project.demo.service.FileService;
 import com.project.demo.service.TeacherService;
 import com.project.demo.utils.FileUtil;
@@ -31,10 +32,14 @@ import java.util.Map;
 public class TeacherController extends BaseController {
     private final TeacherService teacherService;
     private final FileService fileService;
+    private final CourseService courseService;
 
-    public TeacherController(TeacherService teacherService, FileService fileService) {
+    public TeacherController(TeacherService teacherService,
+                             FileService fileService,
+                             CourseService courseService) {
         this.teacherService = teacherService;
         this.fileService = fileService;
+        this.courseService = courseService;
     }
 
     @ApiOperation("教师账号注册")
@@ -86,7 +91,7 @@ public class TeacherController extends BaseController {
         if (userId == null) {
             userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
         }
-        Map courseList = teacherService.getCourseList(userId, pageNo, pageSize);
+        Map courseList = courseService.getCourseList(userId, pageNo, pageSize);
         return CommonReturnType.create(courseList);
     }
 
@@ -100,7 +105,7 @@ public class TeacherController extends BaseController {
     public CommonReturnType getLessonList(@RequestParam Integer courseId,
                                           @RequestParam Integer pageNo,
                                           @RequestParam Integer pageSize) throws BusinessException {
-        Map lessonList = teacherService.getWorkList(courseId, pageNo, pageSize);
+        Map lessonList = courseService.getWorkList(courseId, pageNo, pageSize);
         return CommonReturnType.create(lessonList);
     }
 
@@ -116,7 +121,7 @@ public class TeacherController extends BaseController {
                                          @RequestParam Date deadline,
                                          @RequestParam Integer schedule,
                                          @RequestParam String courseDescription) throws BusinessException {
-        teacherService.createCourse(courseName, deadline, schedule, courseDescription);
+        courseService.createCourse(courseName, deadline, schedule, courseDescription);
         return CommonReturnType.create(RTStr.SUCCESS);
     }
 
@@ -134,12 +139,12 @@ public class TeacherController extends BaseController {
     @ApiOperation("删除课程")
     @ApiImplicitParam(name = "courseId", value = "课程ID")
     public CommonReturnType deleteCourse(@RequestParam Integer courseId) throws BusinessException {
-        teacherService.deleteCourse(courseId);
+        courseService.deleteCourse(courseId);
         return CommonReturnType.create(RTStr.SUCCESS);
     }
 
     @GetMapping("/searchCourse")
-    @ApiOperation("搜索课程")
+    @ApiOperation("搜索课程-分页")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "searchKey", value = "搜索关键字"),
             @ApiImplicitParam(name = "pageNo", value = "页码"),
@@ -148,7 +153,7 @@ public class TeacherController extends BaseController {
     public CommonReturnType searchCourse(@RequestParam String searchKey,
                                          @RequestParam Integer pageNo,
                                          @RequestParam Integer pageSize) throws BusinessException {
-        Map map = teacherService.searchCourseList(searchKey, pageNo, pageSize);
+        Map map = courseService.searchCourseList(searchKey, pageNo, pageSize);
         return CommonReturnType.create(map);
     }
 
@@ -259,7 +264,10 @@ public class TeacherController extends BaseController {
         return CommonReturnType.create(RTStr.SUCCESS);
     }
 
-
+    @ApiOperation("获取目录下所有文件/目录")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "folderId", value = "文件夹ID")
+    })
     @GetMapping("/getFilesUnderFolderId")
     public CommonReturnType getFilesUnderFolderId(@RequestParam Integer folderId) throws BusinessException {
         Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
@@ -295,7 +303,7 @@ public class TeacherController extends BaseController {
         return CommonReturnType.create(RTStr.SUCCESS);
     }
 
-    @ApiOperation("获取未读消息列表")
+    @ApiOperation("获取未读消息列表-分页")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNo", value = "页码"),
             @ApiImplicitParam(name = "pageSize", value = "数据量")
@@ -307,7 +315,7 @@ public class TeacherController extends BaseController {
         return CommonReturnType.create(massageListForSelf);
     }
 
-    @ApiOperation("获取已读消息列表")
+    @ApiOperation("获取已读消息列表-分页")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNo", value = "页码"),
             @ApiImplicitParam(name = "pageSize", value = "数据量")
@@ -320,7 +328,7 @@ public class TeacherController extends BaseController {
     }
 
 
-    @ApiOperation("搜索联系人")
+    @ApiOperation("搜索联系人-分页")
     @ApiImplicitParam(name = "searchKey", value = "搜索关键字")
     @GetMapping("/searchUser")
     public CommonReturnType searchUser(@RequestParam String searchKey,
@@ -329,4 +337,16 @@ public class TeacherController extends BaseController {
         Map map = teacherService.searchUsers(searchKey, pageNo, pageSize);
         return CommonReturnType.create(map);
     }
+
+    @ApiOperation("创建课时")
+    @ApiImplicitParams({})
+    @GetMapping("createWork")
+    public CommonReturnType createWork(@RequestParam Integer courseId,
+                                       @RequestParam String workName,
+                                       @RequestParam Date deadline,
+                                       @RequestParam String workDesc) throws BusinessException {
+        courseService.createWork(courseId, workName, deadline, workDesc);
+        return CommonReturnType.create(RTStr.SUCCESS);
+    }
+
 }

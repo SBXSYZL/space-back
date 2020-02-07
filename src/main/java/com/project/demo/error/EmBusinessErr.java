@@ -46,6 +46,7 @@ public enum EmBusinessErr implements CommonError {
     DELETE_COURSE_ERROR(7004, "删除课程失败"),
     GET_ELECTIVE_LIST_ERROR(7005, "获取选中该课程学生列表失败"),
     SEARCH_COURSE_ERROR(7006, "搜索课程出错"),
+    CREATE_WORK_ERROR(7007, "创建课时失败"),
 
     //消息相关
     POST_MSG_ERROR(8001, "发送消息失败"),

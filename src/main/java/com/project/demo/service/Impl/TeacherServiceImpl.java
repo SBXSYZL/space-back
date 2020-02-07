@@ -31,9 +31,6 @@ public class TeacherServiceImpl implements TeacherService {
     UserDOMapper userDOMapper;
 
     @Autowired
-    CourseDOMapper courseDOMapper;
-
-    @Autowired
     ElectiveDOMapper electiveDOMapper;
 
     @Autowired
@@ -99,54 +96,9 @@ public class TeacherServiceImpl implements TeacherService {
         }
     }
 
-    @Override
-    public Map getCourseList(Integer userId, Integer pageNo, Integer pageSize) throws BusinessException {
-        try {
-            Page page = PageHelper.startPage(pageNo, pageSize);
-            List<CourseVO> list = courseDOMapper.getCourseList(userId);
-            return PageUtil.getListWithPageInfo(list, page);
-        } catch (Exception e) {
-            throw new BusinessException(EmBusinessErr.COURSE_LIST_GET_ERROR);
-        }
-    }
 
-    @Override
-    public Map getWorkList(Integer courseId, Integer pageNo, Integer pageSize) throws BusinessException {
-        try {
-            Page page = PageHelper.startPage(pageNo, pageSize);
-//            List<WorkDO> lessonList = lessonDOMapper.getLessonList(courseId);
-            List<WorkDO> lessonList = null;
-            return PageUtil.getListWithPageInfo(lessonList, page);
-        } catch (Exception e) {
-            throw new BusinessException(EmBusinessErr.LESSON_LIST_GET_ERROR);
-        }
-    }
 
-    @Override
-    public void createCourse(String courseName, Date deadline, Integer schedule, String courseDescription) throws BusinessException {
-        try {
-            CourseDO courseDO = new CourseDO();
-            Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
-            courseDO.setAuthorId(userId);
-            courseDO.setCourseName(courseName);
-            courseDO.setCourseDeadline(deadline);
-            courseDO.setSchedule(schedule);
-            courseDO.setCourseDesc(courseDescription);
-            courseDOMapper.createCourse(courseDO);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new BusinessException(EmBusinessErr.CREATE_COURSE_ERROR);
-        }
-    }
 
-    @Override
-    public void deleteCourse(Integer courseId) throws BusinessException {
-        try {
-            courseDOMapper.deleteCourse(courseId);
-        } catch (Exception e) {
-            throw new BusinessException(EmBusinessErr.DELETE_COURSE_ERROR);
-        }
-    }
 
     @Override
     public Map getElectiveList(Integer courseId, Integer pageNo, Integer pageSize) throws BusinessException {
@@ -159,16 +111,6 @@ public class TeacherServiceImpl implements TeacherService {
         }
     }
 
-    @Override
-    public Map searchCourseList(String searchKey, Integer pageNo, Integer pageSize) throws BusinessException {
-        try {
-            Page page = PageHelper.startPage(pageNo, pageSize);
-            List<CourseVO> courseVOS = courseDOMapper.searchCourseList(searchKey);
-            return PageUtil.getListWithPageInfo(courseVOS, page);
-        } catch (Exception e) {
-            throw new BusinessException(EmBusinessErr.SEARCH_COURSE_ERROR);
-        }
-    }
 
     @Override
     public void writeMsg(Integer parentId, String content, Integer toId) throws BusinessException {
@@ -183,6 +125,7 @@ public class TeacherServiceImpl implements TeacherService {
             msgDO.setToId(toId);
             msgDOMapper.writeMsg(msgDO);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BusinessException(EmBusinessErr.POST_MSG_ERROR);
         }
     }
@@ -222,4 +165,6 @@ public class TeacherServiceImpl implements TeacherService {
             throw new BusinessException(EmBusinessErr.SEARCH_USER_ERROR);
         }
     }
+
+
 }

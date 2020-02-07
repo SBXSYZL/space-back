@@ -5,6 +5,7 @@ import com.project.demo.VO.CourseVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Date;
 import java.util.List;
 
 public interface CourseDOMapper {
@@ -26,7 +27,9 @@ public interface CourseDOMapper {
 
     void createCourse(@Param("courseDO") CourseDO courseDO);
 
-    void deleteCourse(@Param("courseId") Integer courseId);
+    void deleteCourse(@Param("courseId") Integer courseId, @Param("userId") Integer userId);
 
     List<CourseVO> searchCourseList(@Param("searchKey") String searchKey);
+
+    void createWork(@Param("userId") Integer userId, @Param("courseId") Integer courseId, @Param("workName") String workName, @Param("workDesc") String workDesc, @Param("deadline") Date deadline);
 }
