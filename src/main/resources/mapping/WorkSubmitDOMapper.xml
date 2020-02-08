@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.demo.dao.WorkSubmitDOMapper">
+    <resultMap id="BaseResultMap" type="com.project.demo.DO.WorkSubmitDO">
+        <id column="submit_id" jdbcType="INTEGER" property="submitId"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="course_id" jdbcType="INTEGER" property="courseId"/>
+        <result column="submit_status" jdbcType="TINYINT" property="submitStatus"/>
+        <result column="work_id" jdbcType="INTEGER" property="workId"/>
+        <result column="submit_date" jdbcType="DATE" property="submit_date"/>
+        <result column="score" jdbcType="INTEGER" property="score"/>
+    </resultMap>
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.project.demo.DO.WorkSubmitDO">
+        <result column="content" jdbcType="LONGVARCHAR" property="content"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    submit_id, user_id, course_id, submit_status, work_id,submit_date,score
+  </sql>
+    <sql id="Blob_Column_List">
+    content
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from workSubmit
+        where submit_id = #{submitId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from workSubmit
+    where submit_id = #{submitId,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.project.demo.DO.WorkSubmitDO">
+    insert into workSubmit (submit_id, user_id, course_id, 
+      submit_status, work_id, content
+      )
+    values (#{submitId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{courseId,jdbcType=INTEGER}, 
+      #{submitStatus,jdbcType=TINYINT}, #{workId,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.project.demo.DO.WorkSubmitDO">
+        insert into workSubmit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="submitId != null">
+                submit_id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="courseId != null">
+                course_id,
+            </if>
+            <if test="submitStatus != null">
+                submit_status,
+            </if>
+            <if test="workId != null">
+                work_id,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="submitId != null">
+                #{submitId,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="courseId != null">
+                #{courseId,jdbcType=INTEGER},
+            </if>
+            <if test="submitStatus != null">
+                #{submitStatus,jdbcType=TINYINT},
+            </if>
+            <if test="workId != null">
+                #{workId,jdbcType=INTEGER},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.project.demo.DO.WorkSubmitDO">
+        update workSubmit
+        <set>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="courseId != null">
+                course_id = #{courseId,jdbcType=INTEGER},
+            </if>
+            <if test="submitStatus != null">
+                submit_status = #{submitStatus,jdbcType=TINYINT},
+            </if>
+            <if test="workId != null">
+                work_id = #{workId,jdbcType=INTEGER},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where submit_id = #{submitId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.project.demo.DO.WorkSubmitDO">
+    update workSubmit
+    set user_id = #{userId,jdbcType=INTEGER},
+      course_id = #{courseId,jdbcType=INTEGER},
+      submit_status = #{submitStatus,jdbcType=TINYINT},
+      work_id = #{workId,jdbcType=INTEGER},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where submit_id = #{submitId,jdbcType=INTEGER}
+  </update>
+    <update id="updateByPrimaryKey" parameterType="com.project.demo.DO.WorkSubmitDO">
+    update workSubmit
+    set user_id = #{userId,jdbcType=INTEGER},
+      course_id = #{courseId,jdbcType=INTEGER},
+      submit_status = #{submitStatus,jdbcType=TINYINT},
+      work_id = #{workId,jdbcType=INTEGER}
+    where submit_id = #{submitId,jdbcType=INTEGER}
+  </update>
+
+    <select id="getWorkSubmitList" resultType="com.project.demo.VO.WorkSubmitVO">
+        select
+        ws.submit_id as submitId,
+        ws.user_id as userId,
+        u.nick_name as userName,
+        ws.submit_status as submitStatus,
+        ws.content as content,
+        ws.score
+        from workSubmit ws inner join user u
+        on ws.user_id = u.user_id
+        where ws.work_id=#{workId,jdbcType=INTEGER}
+    </select>
+
+    <update id="gradeAssignment">
+        update workSubmit
+        set
+        submit_status=#{status,jdbcType=TINYINT},
+        score=#{score,jdbcType=INTEGER}
+        where submit_id=#{submitId,jdbcType=INTEGER}
+    </update>
+</mapper>
