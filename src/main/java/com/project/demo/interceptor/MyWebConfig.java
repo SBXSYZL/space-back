@@ -20,10 +20,13 @@ public class MyWebConfig implements WebMvcConfigurer {
 //    @Resource
 //    private AdminLoginInterceptor adminLoginInterceptor;
 
-    private final String[] userLoginPath = {"/student/**"};
-    private final String[] userLoginExcludePath = {"/student/studentLogin", "/student/studentRegistered"};
-    private final String[] adminLoginPath = {"/teacher/**"};
-    private final String[] adminLoginExcludePath = {"/teacher/teacherLogin", "/teacher/teacherRegistered"};
+    @Resource
+    private TeacherLoginInterceptor teacherLoginInterceptor;
+
+    private final String[] studentLoginPath = {"/student/**"};
+    private final String[] studentLoginExcludePath = {"/student/studentLogin", "/student/studentRegistered"};
+    private final String[] teacherLoginPath = {"/teacher/**"};
+    private final String[] teacherLoginExcludePath = {"/teacher/teacherLogin", "/teacher/teacherRegistered"};
 
     /**
      * 拦截器注册
@@ -33,7 +36,7 @@ public class MyWebConfig implements WebMvcConfigurer {
 
 //        注册日志信息
         registry.addInterceptor(logInterceptor).addPathPatterns("/**");
-//        registry.addInterceptor(userLoginInterceptor).addPathPatterns(userLoginPath).excludePathPatterns(userLoginExcludePath);
+        registry.addInterceptor(teacherLoginInterceptor).addPathPatterns(teacherLoginPath).excludePathPatterns(teacherLoginExcludePath);
 //        registry.addInterceptor(adminLoginInterceptor).addPathPatterns(adminLoginPath).excludePathPatterns(adminLoginExcludePath);
     }
 }
