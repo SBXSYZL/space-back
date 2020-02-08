@@ -41,6 +41,7 @@ public class FileUtil {
 //                path = new File("");
 //            }
             File path = createAbsoluteJarFile();
+            if (path == null) throw new NullPointerException();
             //是否存在static/upload目录，不存在则创建
             File upload = null;
             if (dir != null) {
@@ -121,7 +122,7 @@ public class FileUtil {
 //            }
             File path = createAbsoluteJarFile();
             File upload = new File(path.getAbsolutePath(), "static/upload/" + fileName);
-//            System.out.println(upload.getAbsolutePath());
+            System.out.println(upload.getAbsolutePath());
             FileSystemResource resource = new FileSystemResource(upload.getAbsolutePath());
             String mediaTypeStr = URLConnection.getFileNameMap().getContentTypeFor(fileName);
             mediaTypeStr = (mediaTypeStr == null) ? MediaType.APPLICATION_OCTET_STREAM_VALUE : mediaTypeStr;
@@ -144,11 +145,17 @@ public class FileUtil {
 
     //创建jar包的相对路径文件
     private static File createAbsoluteJarFile() throws FileNotFoundException {
-        File path = new File(ResourceUtils.getURL("classpath:").getPath());
-        if (!path.exists()) {
-            path = new File("");
+        try {
+            File path = new File(ResourceUtils.getURL("classpath:").getPath());
+            if (!path.exists()) {
+                path = new File("");
+            }
+            return path;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-        return path;
+
     }
 
     //创建多重目录

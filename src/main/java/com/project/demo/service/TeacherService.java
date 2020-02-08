@@ -15,17 +15,7 @@ public interface TeacherService {
 
     void teacherRegistered(String nickName, String account, String password, String tel) throws BusinessException;
 
-
-
-
-
-
-
-
-
     Map getElectiveList(Integer courseId, Integer pageNo, Integer pageSize) throws BusinessException;
-
-
 
     void writeMsg(Integer parentId, String content, Integer toId) throws BusinessException;
 
@@ -34,6 +24,5 @@ public interface TeacherService {
     Map getMyWriteToList(Integer pageNo, Integer pageSize) throws BusinessException;
 
     Map searchUsers(String searchKey, Integer pageNo, Integer pageSize) throws BusinessException;
-
 
 }

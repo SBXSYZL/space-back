@@ -104,6 +104,7 @@
       and course_id = #{courseId,jdbcType=INTEGER}
   </update>
 
+
     <select id="getElectiveList" parameterType="java.lang.Integer" resultType="com.project.demo.VO.ElectiveVO">
         select
         u.user_id,u.nick_name,CONVERT(e.completed/c.schedule,DECIMAL(10,2)) as progress,performance_score,e.course_id,work_score,exam_score
@@ -113,4 +114,13 @@
         on c.author_id = u.user_id
         where e.course_id=#{courseId,jdbcType=INTEGER}
     </select>
+    <update id="courseGrading">
+        update elective e right join course c
+        on e.course_id=e.course_id
+        set
+        e.exam_score=#{examScore,jdbcType=FLOAT},
+        e.performance_score=#{performanceScore,jdbcType=FLOAT}
+        where e.user_id=#{stuId,jdbcType=INTEGER}
+        and c.author_id=#{teacherId,jdbcType=INTEGER}
+    </update>
 </mapper>

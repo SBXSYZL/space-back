@@ -17,6 +17,8 @@ public class CourseDO {
 
     private String courseDesc;
 
+    private Integer stuCnt;
+
     public Integer getCourseId() {
         return courseId;
     }
@@ -71,5 +73,13 @@ public class CourseDO {
 
     public void setCourseDesc(String courseDesc) {
         this.courseDesc = courseDesc == null ? null : courseDesc.trim();
+    }
+
+    public Integer getStuCnt() {
+        return stuCnt;
+    }
+
+    public void setStuCnt(Integer stuCnt) {
+        this.stuCnt = stuCnt;
     }
 }

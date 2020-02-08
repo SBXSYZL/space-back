@@ -5,7 +5,12 @@ import com.github.pagehelper.PageHelper;
 import com.project.demo.DO.CourseDO;
 import com.project.demo.DO.WorkDO;
 import com.project.demo.VO.CourseVO;
+import com.project.demo.VO.WorkSubmitVO;
+import com.project.demo.VO.WorkVO;
 import com.project.demo.dao.CourseDOMapper;
+import com.project.demo.dao.ElectiveDOMapper;
+import com.project.demo.dao.WorkDOMapper;
+import com.project.demo.dao.WorkSubmitDOMapper;
 import com.project.demo.error.BusinessException;
 import com.project.demo.error.EmBusinessErr;
 import com.project.demo.service.CourseService;
@@ -23,6 +28,15 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     CourseDOMapper courseDOMapper;
 
+    @Autowired
+    WorkDOMapper workDOMapper;
+
+    @Autowired
+    WorkSubmitDOMapper workSubmitDOMapper;
+
+    @Autowired
+    ElectiveDOMapper electiveDOMapper;
+
     @Override
     public Map getCourseList(Integer userId, Integer pageNo, Integer pageSize) throws BusinessException {
         try {
@@ -35,13 +49,14 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Map getWorkList(Integer courseId, Integer pageNo, Integer pageSize) throws BusinessException {
+    public Map getWorkList(Integer userId, Integer pageNo, Integer pageSize) throws BusinessException {
         try {
             Page page = PageHelper.startPage(pageNo, pageSize);
 //            List<WorkDO> lessonList = lessonDOMapper.getLessonList(courseId);
-            List<WorkDO> lessonList = null;
+            List<WorkVO> lessonList = workDOMapper.getWorkList(userId);
             return PageUtil.getListWithPageInfo(lessonList, page);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BusinessException(EmBusinessErr.LESSON_LIST_GET_ERROR);
         }
     }
@@ -88,11 +103,54 @@ public class CourseServiceImpl implements CourseService {
     public void createWork(Integer courseId, String workName, Date deadline, String workDesc) throws BusinessException {
         try {
             Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
-            courseDOMapper.createWork(userId, courseId, workName, workDesc, deadline);
+            workDOMapper.createWork(userId, courseId, workName, workDesc, deadline);
         } catch (Exception e) {
             e.printStackTrace();
             throw new BusinessException(EmBusinessErr.CREATE_WORK_ERROR);
         }
     }
 
+    @Override
+    public Map getListOfStudentSubmissionsForTheClass(Integer workId, Integer pageNo, Integer pageSize) throws BusinessException {
+        try {
+            Page page = PageHelper.startPage(pageNo, pageSize);
+            List<WorkSubmitVO> workSubmitList = workSubmitDOMapper.getWorkSubmitList(workId);
+            return PageUtil.getListWithPageInfo(workSubmitList, page);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(EmBusinessErr.GET_SUBMIT_WORK_ERROR);
+        }
+    }
+
+    @Override
+    public void gradeAssignment(Integer submitId, Byte status, Integer score) throws BusinessException {
+        try {
+            workSubmitDOMapper.gradeAssignment(submitId, status, score);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(EmBusinessErr.SUBMIT_EVAL_ERROR);
+        }
+    }
+
+    @Override
+    public Map searchWork(Integer userId, String searchKey, Integer pageNo, Integer pageSize) throws BusinessException {
+        try {
+            Page page = PageHelper.startPage(pageNo, pageSize);
+            List<WorkVO> workVOS = workDOMapper.searchWork(userId, searchKey);
+            return PageUtil.getListWithPageInfo(workVOS, page);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(EmBusinessErr.SEARCH_WORK_ERROR);
+        }
+    }
+
+    @Override
+    public void courseGrading(Integer courseId, Integer stuId, Integer teacherId, Float performanceScore, Float examScore) throws BusinessException {
+        try {
+            electiveDOMapper.courseGrading(courseId, stuId, teacherId, performanceScore, examScore);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(EmBusinessErr.COURSE_GRADING_ERROR);
+        }
+    }
 }

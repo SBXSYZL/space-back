@@ -27,14 +27,21 @@ import java.util.Map;
 
 @Service
 public class TeacherServiceImpl implements TeacherService {
-    @Autowired
+
     UserDOMapper userDOMapper;
 
-    @Autowired
+
     ElectiveDOMapper electiveDOMapper;
 
-    @Autowired
+
     MsgDOMapper msgDOMapper;
+
+
+    public TeacherServiceImpl(UserDOMapper userDOMapper, ElectiveDOMapper electiveDOMapper, MsgDOMapper msgDOMapper) {
+        this.userDOMapper = userDOMapper;
+        this.electiveDOMapper = electiveDOMapper;
+        this.msgDOMapper = msgDOMapper;
+    }
 
     @Override
     public String teacherLogin(String account, String password) throws BusinessException {
@@ -95,9 +102,6 @@ public class TeacherServiceImpl implements TeacherService {
             throw new BusinessException(EmBusinessErr.USER_REGISTERED_ERROR);
         }
     }
-
-
-
 
 
     @Override
@@ -165,6 +169,4 @@ public class TeacherServiceImpl implements TeacherService {
             throw new BusinessException(EmBusinessErr.SEARCH_USER_ERROR);
         }
     }
-
-
 }

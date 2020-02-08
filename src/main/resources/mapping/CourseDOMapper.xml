@@ -8,12 +8,13 @@
         <result column="author_id" jdbcType="INTEGER" property="authorId"/>
         <result column="schedule" jdbcType="INTEGER" property="schedule"/>
         <result column="completed" jdbcType="INTEGER" property="completed"/>
+        <result column="stu_cnt" jdbcType="INTEGER" property="stuCnt"/>
     </resultMap>
     <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.project.demo.DO.CourseDO">
         <result column="course_desc" jdbcType="LONGVARCHAR" property="courseDesc"/>
     </resultMap>
     <sql id="Base_Column_List">
-    course_id, course_name, course_deadline, author_id, schedule, completed
+    course_id, course_name, course_deadline, author_id, schedule, completed,stu_cnt
   </sql>
     <sql id="Blob_Column_List">
     course_desc
@@ -154,10 +155,6 @@
         where  locate(#{searchKey,jdbcType=VARCHAR},course_name)>0||
                locate(#{searchKey,jdbcType=VARCHAR},course_desc)>0
     </select>
-    <insert id="createWork">
-        insert into work (course_id, work_name, work_desc, deadline, author_id)
-        values (#{courseId,jdbcType=INTEGER},#{workName,jdbcType=VARCHAR},#{workDesc,jdbcType=VARCHAR},#{deadline,jdbcType=TIMESTAMP},#{userId,jdbcType=INTEGER});
-    </insert>
 
 
 </mapper>

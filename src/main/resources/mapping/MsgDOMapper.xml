@@ -177,4 +177,5 @@
         on m.author_id=u.user_id
         where author_id=#{myId,jdbcType=INTEGER}
     </select>
+
 </mapper>

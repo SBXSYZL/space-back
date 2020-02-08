@@ -31,5 +31,5 @@ public interface CourseDOMapper {
 
     List<CourseVO> searchCourseList(@Param("searchKey") String searchKey);
 
-    void createWork(@Param("userId") Integer userId, @Param("courseId") Integer courseId, @Param("workName") String workName, @Param("workDesc") String workDesc, @Param("deadline") Date deadline);
+
 }

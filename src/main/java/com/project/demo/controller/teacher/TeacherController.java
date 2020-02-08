@@ -97,15 +97,14 @@ public class TeacherController extends BaseController {
 
     @ApiOperation("获取课时列表-分页 ")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "courseId", value = "课程ID"),
             @ApiImplicitParam(name = "pageNo", value = "页码"),
             @ApiImplicitParam(name = "pageSize", value = "数据量")
     })
     @GetMapping("/getLessonList")
-    public CommonReturnType getLessonList(@RequestParam Integer courseId,
-                                          @RequestParam Integer pageNo,
+    public CommonReturnType getLessonList(@RequestParam Integer pageNo,
                                           @RequestParam Integer pageSize) throws BusinessException {
-        Map lessonList = courseService.getWorkList(courseId, pageNo, pageSize);
+        Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
+        Map lessonList = courseService.getWorkList(userId, pageNo, pageSize);
         return CommonReturnType.create(lessonList);
     }
 
@@ -163,7 +162,7 @@ public class TeacherController extends BaseController {
             @ApiImplicitParam(name = "fileId", value = "文件ID"),
             @ApiImplicitParam(name = "dir", value = "文件所属目录，如删除用户8目录下的a文件夹下的b文件夹的1.jpg: a/b ")
     })
-    @GetMapping("deleteFile")
+    @GetMapping("/deleteFile")
     public CommonReturnType deleteFile(@RequestParam String fileName,
                                        @RequestParam Integer fileId,
                                        @RequestParam(required = false) String dir) throws BusinessException {
@@ -327,6 +326,15 @@ public class TeacherController extends BaseController {
         return CommonReturnType.create(massageListForSelf);
     }
 
+    @ApiOperation("获取已发送信息")
+    @ApiImplicitParams({})
+    @GetMapping("/getMySendMsg")
+    public CommonReturnType getMySendMsg(@RequestParam Integer pageNo,
+                                         @RequestParam Integer pageSize) throws BusinessException {
+        Map myWriteToList = teacherService.getMyWriteToList(pageNo, pageSize);
+        return CommonReturnType.create(myWriteToList);
+    }
+
 
     @ApiOperation("搜索联系人-分页")
     @ApiImplicitParam(name = "searchKey", value = "搜索关键字")
@@ -348,5 +356,74 @@ public class TeacherController extends BaseController {
         courseService.createWork(courseId, workName, deadline, workDesc);
         return CommonReturnType.create(RTStr.SUCCESS);
     }
+
+    @ApiOperation("获得该课时学生提交作业列表-分页")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "workId", value = "课时ID"),
+            @ApiImplicitParam(name = "pageNo", value = "页码"),
+            @ApiImplicitParam(name = "pageSize", value = "数据量 ")
+    })
+    @GetMapping("/getListOfStudentSubmissionsForTheClass")
+    public CommonReturnType getListOfStudentSubmissionsForTheClass(@RequestParam Integer workId,
+                                                                   @RequestParam Integer pageNo,
+                                                                   @RequestParam Integer pageSize) throws BusinessException {
+        Map map = courseService.getListOfStudentSubmissionsForTheClass(workId, pageNo, pageSize);
+        return CommonReturnType.create(map);
+    }
+
+    @ApiOperation("教师提交学生作业评价")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "submitId", value = "提交作业的ID"),
+            @ApiImplicitParam(name = "status", value = "作业是否提交"),
+            @ApiImplicitParam(name = "score", value = "作业评分")
+    })
+    @GetMapping("/gradeAssignment")
+    public CommonReturnType gradeAssignment(@RequestParam Integer submitId,
+                                            @RequestParam Integer status,
+                                            @RequestParam Integer score) throws BusinessException {
+        Byte r_status = status == 1 ? (byte) 1 : (byte) 0;
+        courseService.gradeAssignment(submitId, r_status, score);
+        return CommonReturnType.create(RTStr.SUCCESS);
+    }
+
+    @ApiOperation("下载学生作业")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "submitId", value = "提交的作业ID"),
+            @ApiImplicitParam(name = "content", value = "文件名")
+    })
+    @GetMapping("/downloadSubmitWork")
+    public ResponseEntity<Resource> downloadSubmitWork(@RequestParam Integer submitId,
+                                                       @RequestParam String content) throws BusinessException {
+        return FileUtil.getFile("submitId_" + submitId + "/" + content);
+    }
+
+    @ApiOperation("搜索课时")
+    @ApiImplicitParams({})
+    @GetMapping("/searchWork")
+    public CommonReturnType searchWork(@RequestParam String searchKey,
+                                       @RequestParam Integer pageNo,
+                                       @RequestParam Integer pageSize) throws BusinessException {
+        Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
+        Map map = courseService.searchWork(userId, searchKey, pageNo, pageSize);
+        return CommonReturnType.create(map);
+    }
+
+    @ApiOperation("教师对学生课程评分")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "courseId", value = "课程ID"),
+            @ApiImplicitParam(name = "userId", value = "学生ID"),
+            @ApiImplicitParam(name = "performanceScore", value = "表现分"),
+            @ApiImplicitParam(name = "examScore", value = "考试分")
+    })
+    @GetMapping("/courseGrading")
+    public CommonReturnType courseGrading(@RequestParam Integer courseId,
+                                          @RequestParam Integer userId,
+                                          @RequestParam Float performanceScore,
+                                          @RequestParam Float examScore) throws BusinessException {
+        Integer teacherId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
+        courseService.courseGrading(courseId, userId, teacherId, performanceScore, examScore);
+        return CommonReturnType.create(RTStr.SUCCESS);
+    }
+
 
 }
