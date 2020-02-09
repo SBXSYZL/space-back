@@ -10,6 +10,8 @@ import java.util.Date;
 public class MsgVO {
     private Integer msgId;
 
+    private Integer authorId;
+
     private String authorName;
 
     private Date postDate;
@@ -22,6 +24,14 @@ public class MsgVO {
 
     public void setMsgId(Integer msgId) {
         this.msgId = msgId;
+    }
+
+    public Integer getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(Integer authorId) {
+        this.authorId = authorId;
     }
 
     public String getAuthorName() {

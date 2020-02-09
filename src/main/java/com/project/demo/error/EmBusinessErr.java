@@ -51,6 +51,8 @@ public enum EmBusinessErr implements CommonError {
     SUBMIT_EVAL_ERROR(7009, "提交评分失败"),
     SEARCH_WORK_ERROR(7010, "搜索课时失败"),
     COURSE_GRADING_ERROR(7011, "课程评分失败"),
+    GET_SELECTED_COURSE_LIST_ERROR(7012, "获取已选择课程列表失败 "),
+    GET_COURSE_SCORE_ERROR(7013, "获取成绩失败"),
 
     //消息相关
     POST_MSG_ERROR(8001, "发送消息失败"),

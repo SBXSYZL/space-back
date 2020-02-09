@@ -1,5 +1,7 @@
 package com.project.demo.service;
 
+import com.project.demo.VO.ElectiveVO;
+import com.project.demo.VO.ScoreVO;
 import com.project.demo.error.BusinessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,4 +32,8 @@ public interface CourseService {
     Map searchWork(Integer userId, String searchKey, Integer pageNo, Integer pageSize) throws BusinessException;
 
     void courseGrading(Integer courseId, Integer stuId, Integer teacherId, Float performanceScore, Float examScore) throws BusinessException;
+
+    Map getSelectedCourseList(Integer userId, Integer pageNo, Integer pageSize) throws BusinessException;
+
+    ScoreVO getCourseScore(Integer userId, Integer courseId) throws BusinessException;
 }

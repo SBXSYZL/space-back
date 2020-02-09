@@ -4,9 +4,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.project.demo.DO.CourseDO;
 import com.project.demo.DO.WorkDO;
-import com.project.demo.VO.CourseVO;
-import com.project.demo.VO.WorkSubmitVO;
-import com.project.demo.VO.WorkVO;
+import com.project.demo.VO.*;
 import com.project.demo.dao.CourseDOMapper;
 import com.project.demo.dao.ElectiveDOMapper;
 import com.project.demo.dao.WorkDOMapper;
@@ -151,6 +149,28 @@ public class CourseServiceImpl implements CourseService {
         } catch (Exception e) {
             e.printStackTrace();
             throw new BusinessException(EmBusinessErr.COURSE_GRADING_ERROR);
+        }
+    }
+
+    @Override
+    public Map getSelectedCourseList(Integer userId, Integer pageNo, Integer pageSize) throws BusinessException {
+        try {
+            Page page = PageHelper.startPage(pageNo, pageSize);
+            List<CourseVO> selectedCourseList = courseDOMapper.getSelectedCourseList(userId);
+            return PageUtil.getListWithPageInfo(selectedCourseList, page);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(EmBusinessErr.GET_SELECTED_COURSE_LIST_ERROR);
+        }
+    }
+
+    @Override
+    public ScoreVO getCourseScore(Integer userId, Integer courseId) throws BusinessException {
+        try {
+            return electiveDOMapper.getCourseScore(userId, courseId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(EmBusinessErr.GET_COURSE_SCORE_ERROR);
         }
     }
 }

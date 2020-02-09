@@ -19,7 +19,7 @@ public class Swagger {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(new ApiInfoBuilder()
                         .title("API list and test")
-                        .description("优食派-API文档")
+                        .description("VR空间感-API文档")
                         .termsOfServiceUrl("http://localhost:8080/swagger-ui.html")
                         .version("1.0.0")
                         .build())

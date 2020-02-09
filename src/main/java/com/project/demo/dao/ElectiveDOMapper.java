@@ -4,6 +4,7 @@ import com.project.demo.DO.ElectiveDO;
 import com.project.demo.DO.ElectiveDOKey;
 import com.project.demo.VO.CourseVO;
 import com.project.demo.VO.ElectiveVO;
+import com.project.demo.VO.ScoreVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -28,4 +29,7 @@ public interface ElectiveDOMapper {
                        @Param("teacherId") Integer teacherId,
                        @Param("performanceScore") Float performanceScore,
                        @Param("examScore") Float examScore);
+
+    ScoreVO getCourseScore(@Param("userId") Integer userId, @Param("courseId") Integer courseId);
+
 }

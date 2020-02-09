@@ -31,5 +31,5 @@ public interface CourseDOMapper {
 
     List<CourseVO> searchCourseList(@Param("searchKey") String searchKey);
 
-
+    List<CourseVO> getSelectedCourseList(@Param("userId") Integer userId);
 }

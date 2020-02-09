@@ -19,9 +19,9 @@ public final class MySessionUtil {
 
     public static String USER_ID = "id: ";
 
-//    static {
-//        MySessionUtil.getSession().setAttribute(USER_ID, 8);
-//    }
+    static {
+        MySessionUtil.getSession().setAttribute(USER_ID, 8);
+    }
 
     /**
      * @author Zjp

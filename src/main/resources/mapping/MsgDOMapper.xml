@@ -164,7 +164,7 @@
     </insert>
 
     <select id="getMassageListForSelf" resultType="com.project.demo.VO.MsgVO">
-        select m.msg_id, u.nick_name authorName, m.post_date,m.content
+        select m.msg_id,u.user_id as authorId, u.nick_name authorName, m.post_date,m.content
         from msg m inner join user u
         on m.author_id=u.user_id
         where m.to_id=#{userId,jdbcType=INTEGER}
@@ -172,7 +172,7 @@
     </select>
 
     <select id="getMyWriteToList" resultType="com.project.demo.VO.MsgVO">
-        select m.msg_id, u.nick_name authorName, m.post_date,m.content
+        select m.msg_id,u.user_id as authorId, u.nick_name authorName, m.post_date,m.content
         from msg m inner join user u
         on m.author_id=u.user_id
         where author_id=#{myId,jdbcType=INTEGER}
