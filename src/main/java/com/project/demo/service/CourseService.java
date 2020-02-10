@@ -36,4 +36,6 @@ public interface CourseService {
     Map getSelectedCourseList(Integer userId, Integer pageNo, Integer pageSize) throws BusinessException;
 
     ScoreVO getCourseScore(Integer userId, Integer courseId) throws BusinessException;
+
+    void joinCourse(Integer userId, Integer courseId) throws BusinessException;
 }

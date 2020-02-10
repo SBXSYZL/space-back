@@ -395,7 +395,8 @@ public class TeacherController extends BaseController {
     @GetMapping("/downloadSubmitWork")
     public ResponseEntity<Resource> downloadSubmitWork(@RequestParam Integer submitId,
                                                        @RequestParam String content) throws BusinessException {
-        return FileUtil.getFile("submitId_" + submitId + "/" + content);
+        String path = "submitId_" + submitId + "/" + content;
+        return FileUtil.getFile(path);
     }
 
     @ApiOperation("搜索课时")

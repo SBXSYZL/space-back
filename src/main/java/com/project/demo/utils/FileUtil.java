@@ -122,7 +122,7 @@ public class FileUtil {
 //            }
             File path = createAbsoluteJarFile();
             File upload = new File(path.getAbsolutePath(), "static/upload/" + fileName);
-            System.out.println(upload.getAbsolutePath());
+//            System.out.println(upload.getAbsolutePath());
             FileSystemResource resource = new FileSystemResource(upload.getAbsolutePath());
             String mediaTypeStr = URLConnection.getFileNameMap().getContentTypeFor(fileName);
             mediaTypeStr = (mediaTypeStr == null) ? MediaType.APPLICATION_OCTET_STREAM_VALUE : mediaTypeStr;
@@ -138,6 +138,7 @@ public class FileUtil {
                     .contentLength(resource.getInputStream().available())
                     .body(resource);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BusinessException(EmBusinessErr.FILE_NOT_FOUND);
         }
 

@@ -32,4 +32,6 @@ public interface ElectiveDOMapper {
 
     ScoreVO getCourseScore(@Param("userId") Integer userId, @Param("courseId") Integer courseId);
 
+    void joinCourse(@Param("userId") Integer userId, @Param("courseId") Integer courseId);
+
 }

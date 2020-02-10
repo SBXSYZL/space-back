@@ -115,10 +115,12 @@ public class StudentController extends BaseController {
         return CommonReturnType.create(courseScore);
     }
 
-//    @ApiOperation("学生加入课程")
-//    @ApiImplicitParam()
-//    @GetMapping("/joinCourse")
-//    public CommonReturnType joinCourse(@RequestParam Integer courseId) {
-//
-//    }
+    @ApiOperation("学生加入课程")
+    @ApiImplicitParam()
+    @GetMapping("/joinCourse")
+    public CommonReturnType joinCourse(@RequestParam Integer courseId) throws BusinessException {
+        Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
+        courseService.joinCourse(userId, courseId);
+        return CommonReturnType.create(RTStr.SUCCESS);
+    }
 }

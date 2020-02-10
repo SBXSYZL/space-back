@@ -173,4 +173,14 @@ public class CourseServiceImpl implements CourseService {
             throw new BusinessException(EmBusinessErr.GET_COURSE_SCORE_ERROR);
         }
     }
+
+    @Override
+    public void joinCourse(Integer userId, Integer courseId) throws BusinessException {
+        try {
+            electiveDOMapper.joinCourse(userId, courseId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(EmBusinessErr.JOIN_COURSE_ERROR);
+        }
+    }
 }
