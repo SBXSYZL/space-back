@@ -11,6 +11,7 @@ import com.project.demo.service.FileService;
 import com.project.demo.service.TeacherService;
 import com.project.demo.utils.FileUtil;
 import com.project.demo.utils.MySessionUtil;
+import com.project.demo.validator.MyValidator;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -54,6 +55,10 @@ public class TeacherController extends BaseController {
                                               @RequestParam String account,
                                               @RequestParam String password,
                                               @RequestParam String tel) throws BusinessException {
+        MyValidator.checkStrNull(nickName);
+        MyValidator.checkStrNull(account);
+        MyValidator.checkPassword(password);
+        MyValidator.checkTel(tel);
         teacherService.teacherRegistered(nickName, account, password, tel);
         return CommonReturnType.create(RTStr.SUCCESS);
     }
@@ -67,6 +72,10 @@ public class TeacherController extends BaseController {
     })
     public CommonReturnType teacherLogin(@RequestParam String account,
                                          @RequestParam String password) throws BusinessException {
+        MyValidator.checkStrNull(account);
+        if (password.trim().length() < 6 || password.trim().length() > 12) {
+            throw new BusinessException(EmBusinessErr.PARAMETER_INVALIDATION_ERROR, "密码错误");
+        }
         String s = teacherService.teacherLogin(account, password);
         return CommonReturnType.create(s);
     }

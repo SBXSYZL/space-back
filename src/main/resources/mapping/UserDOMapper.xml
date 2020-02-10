@@ -8,9 +8,10 @@
         <result column="account" jdbcType="VARCHAR" property="account"/>
         <result column="password" jdbcType="VARCHAR" property="password"/>
         <result column="tel" jdbcType="VARCHAR" property="tel"/>
+        <result column="coin_cnt" jdbcType="INTEGER" property="coinCnt"/>
     </resultMap>
     <sql id="Base_Column_List">
-    user_id, nick_name, authority, account, password,tel
+    user_id, nick_name, authority, account, password,tel,coin_cnt
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select

@@ -13,6 +13,8 @@ public class UserDO {
 
     private String tel;
 
+    private Integer coinCnt;
+
     public Integer getUserId() {
         return userId;
     }
@@ -59,5 +61,13 @@ public class UserDO {
 
     public void setTel(String tel) {
         this.tel = tel;
+    }
+
+    public Integer getCoinCnt() {
+        return coinCnt;
+    }
+
+    public void setCoinCnt(Integer coinCnt) {
+        this.coinCnt = coinCnt;
     }
 }
