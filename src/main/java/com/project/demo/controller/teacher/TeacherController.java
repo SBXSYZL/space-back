@@ -152,7 +152,8 @@ public class TeacherController extends BaseController {
     public CommonReturnType searchCourse(@RequestParam String searchKey,
                                          @RequestParam Integer pageNo,
                                          @RequestParam Integer pageSize) throws BusinessException {
-        Map map = courseService.searchCourseList(searchKey, pageNo, pageSize);
+        Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
+        Map map = courseService.searchCourseList(searchKey, pageNo, pageSize, userId);
         return CommonReturnType.create(map);
     }
 
@@ -285,7 +286,7 @@ public class TeacherController extends BaseController {
     public CommonReturnType replyMessage(@RequestParam Integer parentId,
                                          @RequestParam String content,
                                          @RequestParam Integer toId) throws BusinessException {
-
+        teacherService.readMsg(parentId);
         teacherService.writeMsg(parentId, content, toId);
         return CommonReturnType.create(RTStr.SUCCESS);
     }

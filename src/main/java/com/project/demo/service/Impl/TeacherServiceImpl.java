@@ -169,4 +169,14 @@ public class TeacherServiceImpl implements TeacherService {
             throw new BusinessException(EmBusinessErr.SEARCH_USER_ERROR);
         }
     }
+
+    @Override
+    public void readMsg(Integer parentId) throws BusinessException {
+        try {
+            msgDOMapper.readMsg(parentId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(EmBusinessErr.POST_MSG_ERROR);
+        }
+    }
 }

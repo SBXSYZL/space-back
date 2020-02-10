@@ -19,7 +19,7 @@ public interface CourseService {
 
     void deleteCourse(Integer courseId) throws BusinessException;
 
-    Map searchCourseList(String searchKey, Integer pageNo, Integer pageSize) throws BusinessException;
+    Map searchCourseList(String searchKey, Integer pageNo, Integer pageSize, Integer userId) throws BusinessException;
 
 
     void createWork(Integer courseId, String workName, Date deadline, String workDesc) throws BusinessException;

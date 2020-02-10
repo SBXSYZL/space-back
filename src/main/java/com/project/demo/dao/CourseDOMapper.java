@@ -29,7 +29,7 @@ public interface CourseDOMapper {
 
     void deleteCourse(@Param("courseId") Integer courseId, @Param("userId") Integer userId);
 
-    List<CourseVO> searchCourseList(@Param("searchKey") String searchKey);
+    List<CourseVO> searchCourseList(@Param("searchKey") String searchKey, @Param("userId") Integer userId);
 
     List<CourseVO> getSelectedCourseList(@Param("userId") Integer userId);
 }

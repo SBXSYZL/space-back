@@ -87,10 +87,10 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Map searchCourseList(String searchKey, Integer pageNo, Integer pageSize) throws BusinessException {
+    public Map searchCourseList(String searchKey, Integer pageNo, Integer pageSize, Integer userId) throws BusinessException {
         try {
             Page page = PageHelper.startPage(pageNo, pageSize);
-            List<CourseVO> courseVOS = courseDOMapper.searchCourseList(searchKey);
+            List<CourseVO> courseVOS = courseDOMapper.searchCourseList(searchKey, userId);
             return PageUtil.getListWithPageInfo(courseVOS, page);
         } catch (Exception e) {
             throw new BusinessException(EmBusinessErr.SEARCH_COURSE_ERROR);

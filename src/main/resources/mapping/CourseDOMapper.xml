@@ -149,11 +149,12 @@
         delete from course
         where course_id=#{courseId,jdbcType=INTEGER} and author_id=#{userId,jdbcType=INTEGER}
     </delete>
-    <select id="searchCourseList" parameterType="java.lang.String" resultType="com.project.demo.VO.CourseVO">
+    <select id="searchCourseList" resultType="com.project.demo.VO.CourseVO">
         select course_id, course_name, course_deadline, author_id, CONVERT(completed/schedule,DECIMAL(10,2)) as progress,course_desc
         from course c
-        where  locate(#{searchKey,jdbcType=VARCHAR},course_name)>0||
-               locate(#{searchKey,jdbcType=VARCHAR},course_desc)>0
+        where c.author_id=#{userId,jdbcType=INTEGER} and
+               (locate(#{searchKey,jdbcType=VARCHAR},course_name)>0 or
+               locate(#{searchKey,jdbcType=VARCHAR},course_desc)>0)
     </select>
     <select id="getSelectedCourseList" resultType="com.project.demo.VO.CourseVO">
         select e.course_id, c.course_name, c.course_deadline, c.author_id, CONVERT(c.completed/c.schedule,DECIMAL(10,2)) as progress,c.course_desc

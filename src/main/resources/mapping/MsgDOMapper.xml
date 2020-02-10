@@ -177,5 +177,10 @@
         on m.author_id=u.user_id
         where author_id=#{myId,jdbcType=INTEGER}
     </select>
+    <update id="readMsg">
+        update msg
+        set msg.status=1
+        where msg_id=#{parentId,jdbcType=INTEGER}
+    </update>
 
 </mapper>

@@ -26,4 +26,7 @@ public interface MsgDOMapper {
     List<MsgVO> getMassageListForSelf(@Param("userId") Integer userId, @Param("status") Byte status);
 
     List<MsgVO> getMyWriteToList(@Param("myId") Integer myId);
+
+    void readMsg(@Param("parentId") Integer parentId);
+
 }

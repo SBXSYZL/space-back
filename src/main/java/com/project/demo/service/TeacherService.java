@@ -25,4 +25,5 @@ public interface TeacherService {
 
     Map searchUsers(String searchKey, Integer pageNo, Integer pageSize) throws BusinessException;
 
+    void readMsg(Integer parentId) throws BusinessException;
 }
