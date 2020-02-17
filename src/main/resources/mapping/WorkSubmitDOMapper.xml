@@ -141,4 +141,9 @@
         score=#{score,jdbcType=INTEGER}
         where submit_id=#{submitId,jdbcType=INTEGER}
     </update>
+    <select id="getWorkScore" resultType="java.lang.Integer">
+        select ws.score
+        from workSubmit ws
+        where ws.work_id=#{workId,jdbcType=INTEGER} and ws.user_id=#{userId,jdbcType=INTEGER}
+    </select>
 </mapper>

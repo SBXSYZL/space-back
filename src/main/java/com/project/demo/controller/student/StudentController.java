@@ -1,6 +1,7 @@
 package com.project.demo.controller.student;
 
 import com.project.demo.VO.ScoreVO;
+import com.project.demo.VO.UserVO;
 import com.project.demo.controller.BaseController;
 import com.project.demo.error.BusinessException;
 import com.project.demo.error.EmBusinessErr;
@@ -11,6 +12,7 @@ import com.project.demo.service.StudentService;
 import com.project.demo.utils.DecimalUtil;
 import com.project.demo.utils.FileUtil;
 import com.project.demo.utils.MySessionUtil;
+import com.project.demo.validator.MyValidator;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -98,10 +100,23 @@ public class StudentController extends BaseController {
         return CommonReturnType.create(selectedCourseList);
     }
 
-    @ApiOperation("获取学生选课成绩")
+
+    @ApiOperation("获取学生可选课程列表")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "")
+            @ApiImplicitParam(name = "pageNo", value = "页码"),
+            @ApiImplicitParam(name = "pageSize", value = "数据量")
     })
+    @GetMapping("/getOptionalCourseList")
+    public CommonReturnType getOptionalCourseList(@RequestParam Integer pageNo,
+                                                  @RequestParam Integer pageSize) throws BusinessException {
+        Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
+        Map optionalCourseList = courseService.getOptionalCourseList(pageNo, pageSize, userId);
+        return CommonReturnType.create(optionalCourseList);
+    }
+
+
+    @ApiOperation("获取学生选课成绩")
+    @ApiImplicitParams({@ApiImplicitParam(name = "courseId", value = "课程ID")})
     @GetMapping("/getCourseScore")
     public CommonReturnType getCourseScore(@RequestParam Integer courseId) throws BusinessException {
         Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
@@ -116,11 +131,118 @@ public class StudentController extends BaseController {
     }
 
     @ApiOperation("学生加入课程")
-    @ApiImplicitParam()
+    @ApiImplicitParams({@ApiImplicitParam(name = "courseId", value = "课程ID")})
     @GetMapping("/joinCourse")
     public CommonReturnType joinCourse(@RequestParam Integer courseId) throws BusinessException {
         Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
         courseService.joinCourse(userId, courseId);
         return CommonReturnType.create(RTStr.SUCCESS);
+    }
+
+
+    @ApiOperation("获取学生信息")
+    @GetMapping("/getInfo")
+    public CommonReturnType getInfo() throws BusinessException {
+        Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
+        UserVO info = studentService.getInfo(userId);
+        return CommonReturnType.create(info);
+    }
+
+    @ApiOperation("获取课程的所有课时")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNo", value = "页码"),
+            @ApiImplicitParam(name = "pageSize", value = "数据量")
+    })
+    @GetMapping("/getWorkOfCourse")
+    public CommonReturnType getWorkOfCourse(@RequestParam Integer pageNo,
+                                            @RequestParam Integer pageSize) throws BusinessException {
+        Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
+        Map workOfCourse = courseService.getWorkOfCourse(userId, pageNo, pageSize);
+        return CommonReturnType.create(workOfCourse);
+    }
+
+
+    @ApiOperation("获取作业成绩")
+    @GetMapping("/getWorkScore")
+    public CommonReturnType getWorkScore(@RequestParam Integer workId) throws BusinessException {
+        Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
+        Integer workScore = courseService.getWorkScore(userId, workId);
+        return CommonReturnType.create(workScore);
+    }
+
+
+    @ApiOperation("回复消息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "parentId", value = "被回复消息ID"),
+            @ApiImplicitParam(name = "content", value = "回复内容"),
+            @ApiImplicitParam(name = "toId", value = "被回复人ID")
+    })
+    @PostMapping("/replyMessage")
+    public CommonReturnType replyMessage(@RequestParam Integer parentId,
+                                         @RequestParam String content,
+                                         @RequestParam Integer toId) throws BusinessException {
+        studentService.readMsg(parentId);
+        studentService.writeMsg(parentId, content, toId);
+        return CommonReturnType.create(RTStr.SUCCESS);
+    }
+
+    @ApiOperation("发送消息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "content", value = "消息内容"),
+            @ApiImplicitParam(name = "toId", value = "对方ID")
+    })
+    @PostMapping("/writeMessageTo")
+    public CommonReturnType writeMessageTo(@RequestParam String content,
+                                           @RequestParam Integer toId) throws BusinessException {
+        studentService.writeMsg(null, content, toId);
+        return CommonReturnType.create(RTStr.SUCCESS);
+    }
+
+    @ApiOperation("获取未读消息列表-分页")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNo", value = "页码"),
+            @ApiImplicitParam(name = "pageSize", value = "数据量")
+    })
+    @GetMapping("/getUnreadMessageList")
+    public CommonReturnType getUnreadMessageList(@RequestParam Integer pageNo,
+                                                 @RequestParam Integer pageSize) throws BusinessException {
+        MyValidator.checkIntNull(pageNo, pageSize);
+        Map massageListForSelf = studentService.getMassageListForSelf((byte) 0, pageNo, pageSize);
+        return CommonReturnType.create(massageListForSelf);
+    }
+
+    @ApiOperation("获取已读消息列表-分页")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNo", value = "页码"),
+            @ApiImplicitParam(name = "pageSize", value = "数据量")
+    })
+    @GetMapping("/getHaveReadMessageList")
+    public CommonReturnType getHaveReadMessageList(@RequestParam Integer pageNo,
+                                                   @RequestParam Integer pageSize) throws BusinessException {
+        MyValidator.checkIntNull(pageNo, pageSize);
+        Map massageListForSelf = studentService.getMassageListForSelf((byte) 1, pageNo, pageSize);
+        return CommonReturnType.create(massageListForSelf);
+    }
+
+    @ApiOperation("获取已发送信息")
+    @ApiImplicitParams({})
+    @GetMapping("/getMySendMsg")
+    public CommonReturnType getMySendMsg(@RequestParam Integer pageNo,
+                                         @RequestParam Integer pageSize) throws BusinessException {
+        MyValidator.checkIntNull(pageNo, pageSize);
+        Map myWriteToList = studentService.getMyWriteToList(pageNo, pageSize);
+        return CommonReturnType.create(myWriteToList);
+    }
+
+
+    @ApiOperation("搜索联系人-分页")
+    @ApiImplicitParam(name = "searchKey", value = "搜索关键字")
+    @GetMapping("/searchUser")
+    public CommonReturnType searchUser(@RequestParam String searchKey,
+                                       @RequestParam Integer pageNo,
+                                       @RequestParam Integer pageSize) throws BusinessException {
+        MyValidator.checkIntNull(pageNo, pageSize);
+        Map map = studentService.searchUsers(searchKey, pageNo, pageSize);
+        return CommonReturnType.create(map);
     }
 }

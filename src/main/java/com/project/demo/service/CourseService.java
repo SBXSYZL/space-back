@@ -21,9 +21,7 @@ public interface CourseService {
 
     Map searchCourseList(String searchKey, Integer pageNo, Integer pageSize, Integer userId) throws BusinessException;
 
-
     void createWork(Integer courseId, String workName, Date deadline, String workDesc) throws BusinessException;
-
 
     Map getListOfStudentSubmissionsForTheClass(Integer workId, Integer pageNo, Integer pageSize) throws BusinessException;
 
@@ -38,4 +36,10 @@ public interface CourseService {
     ScoreVO getCourseScore(Integer userId, Integer courseId) throws BusinessException;
 
     void joinCourse(Integer userId, Integer courseId) throws BusinessException;
+
+    Map getOptionalCourseList(Integer pageNo, Integer pageSize, Integer userId) throws BusinessException;
+
+    Map getWorkOfCourse(Integer userId, Integer pageNo, Integer pageSize) throws BusinessException;
+
+    Integer getWorkScore(Integer userId, Integer workId) throws BusinessException;
 }

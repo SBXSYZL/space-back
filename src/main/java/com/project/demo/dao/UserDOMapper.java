@@ -24,4 +24,6 @@ public interface UserDOMapper {
     void studentRegistered(UserDO userDO);
 
     List<UserVO> searchUser(@Param("searchKey") String searchKey);
+
+    UserVO getInfo(@Param("userId") Integer userId);
 }

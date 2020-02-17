@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 public final class MyLog {
     private static Logger logger = LoggerFactory.getLogger(MyLog.class);
-
     /**
      * 调试代码时使用，相当于System.out.println();
      */

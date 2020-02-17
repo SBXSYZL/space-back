@@ -115,4 +115,9 @@
             locate(#{searchKey,jdbcType=VARCHAR},account)>0||
             locate(#{searchKey,jdbcType=VARCHAR},tel)>0
     </select>
+    <select id="getInfo" resultType="com.project.demo.VO.UserVO">
+        select user_id,nick_name,account,tel
+        from user
+        where user_id=#{userId,jdbcType=INTEGER}
+    </select>
 </mapper>

@@ -162,5 +162,24 @@
         on c.course_id = e.course_id
         where e.user_id=#{userId,jdbcType=INTEGER}
     </select>
+    <select id="getOptionalCourseList" resultType="com.project.demo.VO.CourseVO">
+        select c.course_id,c.course_name,u.nick_name,c.course_deadline,c.course_desc
+        from course c inner join user u
+        on c.author_id=u.user_id
+        where c.course_id not in(
+			select e.course_id
+			from elective e
+			where user_id=#{userId,jdbcType=INTEGER}
+		)
+    </select>
+    <select id="getWorkOfCourse" resultType="com.project.demo.VO.CourseVO">
+        SELECT w.work_id,w.work_name,w.deadline,w.work_desc,max(ws.submit_date)
+        from elective e INNER JOIN work w
+        on e.course_id=w.course_id
+        left join workSubmit ws
+        on w.work_id=ws.work_id
+        where e.user_id=#{userId,jdbcType=INTEGER}
+        group by w.work_id,w.work_name,w.deadline,w.work_desc
+    </select>
 
 </mapper>

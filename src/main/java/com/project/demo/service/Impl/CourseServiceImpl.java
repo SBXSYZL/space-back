@@ -3,7 +3,6 @@ package com.project.demo.service.Impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.project.demo.DO.CourseDO;
-import com.project.demo.DO.WorkDO;
 import com.project.demo.VO.*;
 import com.project.demo.dao.CourseDOMapper;
 import com.project.demo.dao.ElectiveDOMapper;
@@ -181,6 +180,40 @@ public class CourseServiceImpl implements CourseService {
         } catch (Exception e) {
             e.printStackTrace();
             throw new BusinessException(EmBusinessErr.JOIN_COURSE_ERROR);
+        }
+    }
+
+    @Override
+    public Map getOptionalCourseList(Integer pageNo, Integer pageSize, Integer userId) throws BusinessException {
+        try {
+            Page page = PageHelper.startPage(pageNo, pageSize);
+            List<CourseVO> optionalCourseList = courseDOMapper.getOptionalCourseList(userId);
+            return PageUtil.getListWithPageInfo(optionalCourseList, page);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(EmBusinessErr.GET_OPTIONAL_COURSE_LIST);
+        }
+    }
+
+    @Override
+    public Map getWorkOfCourse(Integer userId, Integer pageNo, Integer pageSize) throws BusinessException {
+        try {
+            Page page = PageHelper.startPage(pageNo, pageSize);
+            List<CourseVO> workOfCourse = courseDOMapper.getWorkOfCourse(userId);
+            return PageUtil.getListWithPageInfo(workOfCourse, page);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(EmBusinessErr.GET_SUBMIT_WORK_ERROR);
+        }
+    }
+
+    @Override
+    public Integer getWorkScore(Integer userId, Integer workId) throws BusinessException {
+        try {
+            return workSubmitDOMapper.getWorkScore(userId, workId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(EmBusinessErr.GET_WORK_SCORE_ERROR);
         }
     }
 }

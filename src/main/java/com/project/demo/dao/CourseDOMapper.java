@@ -32,4 +32,9 @@ public interface CourseDOMapper {
     List<CourseVO> searchCourseList(@Param("searchKey") String searchKey, @Param("userId") Integer userId);
 
     List<CourseVO> getSelectedCourseList(@Param("userId") Integer userId);
+
+    List<CourseVO> getOptionalCourseList(@Param("userId") Integer userId);
+
+    List<CourseVO> getWorkOfCourse(@Param("userId") Integer userId);
+
 }

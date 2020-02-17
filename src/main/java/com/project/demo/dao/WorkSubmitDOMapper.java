@@ -24,4 +24,7 @@ public interface WorkSubmitDOMapper {
     List<WorkSubmitVO> getWorkSubmitList(@Param("workId") Integer workId);
 
     void gradeAssignment(@Param("submitId") Integer submitId, @Param("status") Byte status, @Param("score") Integer score);
+
+    Integer getWorkScore(@Param("userId") Integer userId, @Param("workId") Integer workId);
+
 }

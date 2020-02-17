@@ -98,9 +98,9 @@ public class TeacherController extends BaseController {
                                           @RequestParam Integer pageNo,
                                           @RequestParam Integer pageSize) throws BusinessException {
         if (userId == null) {
-            MyValidator.checkIntNull(userId);
             userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
         }
+        MyValidator.checkIntNull(userId);
         MyValidator.checkIntNull(pageNo);
         MyValidator.checkIntNull(pageSize);
         Map courseList = courseService.getCourseList(userId, pageNo, pageSize);
@@ -149,7 +149,7 @@ public class TeacherController extends BaseController {
                                             @RequestParam Integer pageNo,
                                             @RequestParam Integer pageSize) throws BusinessException {
 
-        MyValidator.checkIntNull(pageNo,pageSize);
+        MyValidator.checkIntNull(pageNo, pageSize);
         Map electiveList = teacherService.getElectiveList(courseId, pageNo, pageSize);
         return CommonReturnType.create(electiveList);
     }
@@ -172,7 +172,7 @@ public class TeacherController extends BaseController {
     public CommonReturnType searchCourse(@RequestParam String searchKey,
                                          @RequestParam Integer pageNo,
                                          @RequestParam Integer pageSize) throws BusinessException {
-        MyValidator.checkIntNull(pageNo,pageSize);
+        MyValidator.checkIntNull(pageNo, pageSize);
         Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
         Map map = courseService.searchCourseList(searchKey, pageNo, pageSize, userId);
         return CommonReturnType.create(map);
@@ -332,7 +332,7 @@ public class TeacherController extends BaseController {
     @GetMapping("/getUnreadMessageList")
     public CommonReturnType getUnreadMessageList(@RequestParam Integer pageNo,
                                                  @RequestParam Integer pageSize) throws BusinessException {
-        MyValidator.checkIntNull(pageNo,pageSize);
+        MyValidator.checkIntNull(pageNo, pageSize);
         Map massageListForSelf = teacherService.getMassageListForSelf((byte) 0, pageNo, pageSize);
         return CommonReturnType.create(massageListForSelf);
     }
@@ -345,7 +345,7 @@ public class TeacherController extends BaseController {
     @GetMapping("/getHaveReadMessageList")
     public CommonReturnType getHaveReadMessageList(@RequestParam Integer pageNo,
                                                    @RequestParam Integer pageSize) throws BusinessException {
-        MyValidator.checkIntNull(pageNo,pageSize);
+        MyValidator.checkIntNull(pageNo, pageSize);
         Map massageListForSelf = teacherService.getMassageListForSelf((byte) 1, pageNo, pageSize);
         return CommonReturnType.create(massageListForSelf);
     }
@@ -355,7 +355,7 @@ public class TeacherController extends BaseController {
     @GetMapping("/getMySendMsg")
     public CommonReturnType getMySendMsg(@RequestParam Integer pageNo,
                                          @RequestParam Integer pageSize) throws BusinessException {
-        MyValidator.checkIntNull(pageNo,pageSize);
+        MyValidator.checkIntNull(pageNo, pageSize);
         Map myWriteToList = teacherService.getMyWriteToList(pageNo, pageSize);
         return CommonReturnType.create(myWriteToList);
     }
@@ -367,7 +367,7 @@ public class TeacherController extends BaseController {
     public CommonReturnType searchUser(@RequestParam String searchKey,
                                        @RequestParam Integer pageNo,
                                        @RequestParam Integer pageSize) throws BusinessException {
-        MyValidator.checkIntNull(pageNo,pageSize);
+        MyValidator.checkIntNull(pageNo, pageSize);
         Map map = teacherService.searchUsers(searchKey, pageNo, pageSize);
         return CommonReturnType.create(map);
     }
@@ -393,7 +393,7 @@ public class TeacherController extends BaseController {
     public CommonReturnType getListOfStudentSubmissionsForTheClass(@RequestParam Integer workId,
                                                                    @RequestParam Integer pageNo,
                                                                    @RequestParam Integer pageSize) throws BusinessException {
-        MyValidator.checkIntNull(pageNo,pageSize);
+        MyValidator.checkIntNull(pageNo, pageSize);
         Map map = courseService.getListOfStudentSubmissionsForTheClass(workId, pageNo, pageSize);
         return CommonReturnType.create(map);
     }
@@ -431,7 +431,7 @@ public class TeacherController extends BaseController {
     public CommonReturnType searchWork(@RequestParam String searchKey,
                                        @RequestParam Integer pageNo,
                                        @RequestParam Integer pageSize) throws BusinessException {
-        MyValidator.checkIntNull(pageNo,pageSize);
+        MyValidator.checkIntNull(pageNo, pageSize);
         Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
         Map map = courseService.searchWork(userId, searchKey, pageNo, pageSize);
         return CommonReturnType.create(map);
