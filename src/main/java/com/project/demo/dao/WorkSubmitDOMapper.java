@@ -27,4 +27,7 @@ public interface WorkSubmitDOMapper {
 
     Integer getWorkScore(@Param("userId") Integer userId, @Param("workId") Integer workId);
 
+    void submitWork(@Param("userId") Integer userId, @Param("courseId") Integer courseId, @Param("workId") Integer workId, @Param("content") String content);
+
+    List<WorkSubmitDO> check(@Param("userId") Integer userId, @Param("workId") Integer workId);
 }

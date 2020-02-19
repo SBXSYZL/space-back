@@ -57,6 +57,8 @@ public enum EmBusinessErr implements CommonError {
     JOIN_COURSE_ERROR(7014, "加入课程失败"),
     GET_OPTIONAL_COURSE_LIST(7015, "获取可选课程列表失败"),
     GET_WORK_SCORE_ERROR(7016, "获取作业成绩失败"),
+    SUBMIT_WORK_ERROR(7017, "提交作业失败"),
+    DELETE_WORK_ERROR(7018, "删除作业失败"),
 
     //消息相关
     POST_MSG_ERROR(8001, "发送消息失败"),

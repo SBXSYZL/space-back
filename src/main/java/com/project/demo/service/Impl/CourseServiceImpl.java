@@ -3,6 +3,7 @@ package com.project.demo.service.Impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.project.demo.DO.CourseDO;
+import com.project.demo.DO.WorkSubmitDO;
 import com.project.demo.VO.*;
 import com.project.demo.dao.CourseDOMapper;
 import com.project.demo.dao.ElectiveDOMapper;
@@ -155,7 +156,7 @@ public class CourseServiceImpl implements CourseService {
     public Map getSelectedCourseList(Integer userId, Integer pageNo, Integer pageSize) throws BusinessException {
         try {
             Page page = PageHelper.startPage(pageNo, pageSize);
-            List<CourseVO> selectedCourseList = courseDOMapper.getSelectedCourseList(userId);
+            List<StuCourseVO> selectedCourseList = courseDOMapper.getSelectedCourseList(userId);
             return PageUtil.getListWithPageInfo(selectedCourseList, page);
         } catch (Exception e) {
             e.printStackTrace();
@@ -214,6 +215,30 @@ public class CourseServiceImpl implements CourseService {
         } catch (Exception e) {
             e.printStackTrace();
             throw new BusinessException(EmBusinessErr.GET_WORK_SCORE_ERROR);
+        }
+    }
+
+    @Override
+    public void submitWork(Integer userId, Integer courseId, Integer workId, String fileName) throws BusinessException {
+        try {
+            List<WorkSubmitDO> check = workSubmitDOMapper.check(userId, workId);
+            if (check == null || check.size() <= 0) {
+                workDOMapper.updateSubmit(workId);
+            }
+            workSubmitDOMapper.submitWork(userId, courseId, workId, fileName);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(EmBusinessErr.SUBMIT_WORK_ERROR);
+        }
+    }
+
+    @Override
+    public void deleteWork(Integer userId, Integer workId) throws BusinessException {
+        try {
+            workDOMapper.deleteWork(userId, workId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(EmBusinessErr.DELETE_WORK_ERROR);
         }
     }
 }

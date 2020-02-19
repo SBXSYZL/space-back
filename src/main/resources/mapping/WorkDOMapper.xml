@@ -150,5 +150,14 @@
         where c.author_id=#{userId,jdbcType=INTEGER}
         and locate(#{searchKey,jdbcType=VARCHAR},w.work_name)>0
     </select>
+    <update id="updateSubmit">
+        update work
+        set work.submit_cnt=submit_cnt+1
+        where work_id=#{workId,jdbcType=INTEGER}
+    </update>
+    <delete id="deleteWork">
+        delete from work
+        where work_id=#{workId,jdbcType=INTEGER} and author_id=#{userId,jdbcType=INTEGER}
+    </delete>
 
 </mapper>

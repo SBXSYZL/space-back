@@ -415,13 +415,13 @@ public class TeacherController extends BaseController {
 
     @ApiOperation("下载学生作业")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "submitId", value = "提交的作业ID"),
+            @ApiImplicitParam(name = "workId", value = "作业ID"),
             @ApiImplicitParam(name = "content", value = "文件名")
     })
     @GetMapping("/downloadSubmitWork")
-    public ResponseEntity<Resource> downloadSubmitWork(@RequestParam Integer submitId,
+    public ResponseEntity<Resource> downloadSubmitWork(@RequestParam Integer workId,
                                                        @RequestParam String content) throws BusinessException {
-        String path = "submitId_" + submitId + "/" + content;
+        String path = "work/workId_" + workId + "/" + content;
         return FileUtil.getFile(path);
     }
 
@@ -454,5 +454,12 @@ public class TeacherController extends BaseController {
         return CommonReturnType.create(RTStr.SUCCESS);
     }
 
-
+    @ApiOperation("删除作业")
+    @ApiImplicitParams({})
+    @GetMapping("/deleteWork")
+    public CommonReturnType deleteWork(@RequestParam Integer workId) throws BusinessException {
+        Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
+        courseService.deleteWork(userId, workId);
+        return CommonReturnType.create(RTStr.SUCCESS);
+    }
 }

@@ -29,4 +29,9 @@ public interface WorkDOMapper {
     List<WorkVO> getWorkList(@Param("userId") Integer userId);
 
     List<WorkVO> searchWork(@Param("userId") Integer userId, @Param("searchKey") String searchKey);
+
+    void updateSubmit(Integer workId);
+
+    void deleteWork(@Param("userId") Integer userId, @Param("workId") Integer workId);
+
 }

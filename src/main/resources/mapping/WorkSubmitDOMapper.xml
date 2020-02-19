@@ -146,4 +146,16 @@
         from workSubmit ws
         where ws.work_id=#{workId,jdbcType=INTEGER} and ws.user_id=#{userId,jdbcType=INTEGER}
     </select>
+
+    <insert id="submitWork">
+        insert into workSubmit(user_id, course_id, work_id,content)
+        values( #{userId,jdbcType=INTEGER},
+                #{courseId,jdbcType=INTEGER},#{workId,jdbcType=INTEGER},#{content})
+    </insert>
+
+    <select id="check" resultType="com.project.demo.DO.WorkSubmitDO">
+        select *
+        from workSubmit
+        where user_id=#{userId,jdbcType=INTEGER} and work_id=#{workId,jdbcType=INTEGER}
+    </select>
 </mapper>

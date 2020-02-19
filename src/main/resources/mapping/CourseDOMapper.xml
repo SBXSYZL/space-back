@@ -19,6 +19,7 @@
     <sql id="Blob_Column_List">
     course_desc
   </sql>
+
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
         select
         <include refid="Base_Column_List"/>
@@ -156,10 +157,12 @@
                (locate(#{searchKey,jdbcType=VARCHAR},course_name)>0 or
                locate(#{searchKey,jdbcType=VARCHAR},course_desc)>0)
     </select>
-    <select id="getSelectedCourseList" resultType="com.project.demo.VO.CourseVO">
-        select e.course_id, c.course_name, c.course_deadline, c.author_id, CONVERT(c.completed/c.schedule,DECIMAL(10,2)) as progress,c.course_desc
+    <select id="getSelectedCourseList" resultType="com.project.demo.VO.StuCourseVO">
+        select e.course_id, c.course_name, c.course_deadline, c.author_id,u.nick_name as authorName,c.course_desc
         from course c inner join elective e
         on c.course_id = e.course_id
+        inner join user u
+        on c.author_id=u.user_id
         where e.user_id=#{userId,jdbcType=INTEGER}
     </select>
     <select id="getOptionalCourseList" resultType="com.project.demo.VO.CourseVO">
@@ -181,5 +184,7 @@
         where e.user_id=#{userId,jdbcType=INTEGER}
         group by w.work_id,w.work_name,w.deadline,w.work_desc
     </select>
+
+
 
 </mapper>

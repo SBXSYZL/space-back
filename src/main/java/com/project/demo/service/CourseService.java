@@ -42,4 +42,8 @@ public interface CourseService {
     Map getWorkOfCourse(Integer userId, Integer pageNo, Integer pageSize) throws BusinessException;
 
     Integer getWorkScore(Integer userId, Integer workId) throws BusinessException;
+
+    void submitWork(Integer userId, Integer courseId, Integer workId, String fileName) throws BusinessException;
+
+    void deleteWork(Integer userId, Integer workId) throws BusinessException;
 }

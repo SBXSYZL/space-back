@@ -8,6 +8,7 @@ import com.project.demo.error.EmBusinessErr;
 import com.project.demo.response.CommonReturnType;
 import com.project.demo.response.RTStr;
 import com.project.demo.service.CourseService;
+import com.project.demo.service.FileService;
 import com.project.demo.service.StudentService;
 import com.project.demo.utils.DecimalUtil;
 import com.project.demo.utils.FileUtil;
@@ -16,11 +17,13 @@ import com.project.demo.validator.MyValidator;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,11 +37,14 @@ import java.util.Map;
 public class StudentController extends BaseController {
     private final StudentService studentService;
     private final CourseService courseService;
+    private final FileService fileService;
 
     public StudentController(StudentService studentService,
-                             CourseService courseService) {
+                             CourseService courseService,
+                             FileService fileService) {
         this.studentService = studentService;
         this.courseService = courseService;
+        this.fileService = fileService;
     }
 
     @ApiOperation("学生注册")
@@ -244,5 +250,22 @@ public class StudentController extends BaseController {
         MyValidator.checkIntNull(pageNo, pageSize);
         Map map = studentService.searchUsers(searchKey, pageNo, pageSize);
         return CommonReturnType.create(map);
+    }
+
+    @ApiOperation("提交作业")
+    @ApiImplicitParams({})
+    @PostMapping("/submitWork")
+    @Transactional
+    public CommonReturnType submitWork(@RequestParam("file") MultipartFile file,
+                                       @RequestParam Integer courseId,
+                                       @RequestParam Integer workId) throws BusinessException {
+        //存储方式：work1的提交文件a.txt存储为 work/#{workId}/a.txt
+        if (file.isEmpty()) {
+            throw new BusinessException(EmBusinessErr.FILE_UPLOAD_ERROR);
+        }
+        String fileName = FileUtil.saveFile(file, "work/workId_" + workId);
+        Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
+        courseService.submitWork(userId, courseId, workId, fileName);
+        return CommonReturnType.create(RTStr.SUCCESS);
     }
 }
