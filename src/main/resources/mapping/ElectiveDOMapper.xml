@@ -111,7 +111,7 @@
         from elective e inner join course c
         on e.course_id=c.course_id
         inner join user u
-        on c.author_id = u.user_id
+        on e.user_id = u.user_id
         where e.course_id=#{courseId,jdbcType=INTEGER}
     </select>
     <update id="courseGrading">
