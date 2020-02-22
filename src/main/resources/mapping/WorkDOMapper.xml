@@ -159,5 +159,21 @@
         delete from work
         where work_id=#{workId,jdbcType=INTEGER} and author_id=#{userId,jdbcType=INTEGER}
     </delete>
+    <select id="searchMyWork" resultType="com.project.demo.VO.WorkVO">
+        SELECT e.course_id,c.course_name,w.work_id,w.work_name,w.deadline,w.work_desc,max(ws.submit_date),CONVERT(w.submit_cnt/c.stu_cnt,DECIMAL(10,2)) as progress
+        from elective e INNER JOIN work w
+        on e.course_id=w.course_id
+        left join workSubmit ws
+        on w.work_id=ws.work_id
+        inner join course c
+        on e.course_id=c.course_id
+        where e.user_id=#{userId,jdbcType=INTEGER} and (
+                                                        locate(#{searchKey,jdbcType=VARCHAR},w.work_name)>0 or
+                                                        locate(#{searchKey,jdbcType=VARCHAR},w.work_desc)>0 or
+                                                        locate(#{searchKey,jdbcType=VARCHAR},c.course_name)>0 or
+                                                        locate(#{searchKey,jdbcType=VARCHAR},c.course_desc)
+        )
+        group by w.work_id,w.work_name,w.deadline,w.work_desc
+    </select>
 
 </mapper>

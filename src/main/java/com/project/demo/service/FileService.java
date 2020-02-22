@@ -1,5 +1,6 @@
 package com.project.demo.service;
 
+import com.project.demo.VO.FileVO;
 import com.project.demo.error.BusinessException;
 import javafx.util.Pair;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public interface FileService {
 
     void uploadFile(String fileName, Integer folderId, Integer userId) throws BusinessException;
 
-    List getFilesUnderFolderId(Integer folderId, Integer userId) throws BusinessException;
+    List<FileVO> getFilesUnderFolderId(Integer folderId, Integer userId) throws BusinessException;
 
     void deleteDir(Integer folderId) throws BusinessException;
 

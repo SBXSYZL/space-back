@@ -33,11 +33,15 @@ public interface CourseService {
 
     Map getSelectedCourseList(Integer userId, Integer pageNo, Integer pageSize) throws BusinessException;
 
+    Map searchSelectedCourse(Integer userId, Integer pageNo, Integer pageSize, String searchKey) throws BusinessException;
+
     ScoreVO getCourseScore(Integer userId, Integer courseId) throws BusinessException;
 
     void joinCourse(Integer userId, Integer courseId) throws BusinessException;
 
     Map getOptionalCourseList(Integer pageNo, Integer pageSize, Integer userId) throws BusinessException;
+
+    Map searchOptionalCourseList(Integer pageNo, Integer pageSize, Integer userId, String searchKey) throws BusinessException;
 
     Map getWorkOfCourse(Integer userId, Integer pageNo, Integer pageSize) throws BusinessException;
 
@@ -46,4 +50,7 @@ public interface CourseService {
     void submitWork(Integer userId, Integer courseId, Integer workId, String fileName) throws BusinessException;
 
     void deleteWork(Integer userId, Integer workId) throws BusinessException;
+
+    Map searchMyWork(Integer userId, String searchKey, Integer pageNo, Integer pageSize) throws BusinessException;
+
 }

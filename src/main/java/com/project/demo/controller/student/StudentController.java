@@ -1,5 +1,6 @@
 package com.project.demo.controller.student;
 
+import com.project.demo.VO.FileVO;
 import com.project.demo.VO.ScoreVO;
 import com.project.demo.VO.UserVO;
 import com.project.demo.controller.BaseController;
@@ -30,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -71,8 +73,8 @@ public class StudentController extends BaseController {
     @PostMapping("/studentLogin")
     public CommonReturnType studentLogin(@RequestParam String account,
                                          @RequestParam String password) throws BusinessException {
-        studentService.studentLogin(account, password);
-        return CommonReturnType.create(RTStr.SUCCESS);
+        String s = studentService.studentLogin(account, password);
+        return CommonReturnType.create(s);
     }
 
 //    @PostMapping("/submitWork")
@@ -268,4 +270,73 @@ public class StudentController extends BaseController {
         courseService.submitWork(userId, courseId, workId, fileName);
         return CommonReturnType.create(RTStr.SUCCESS);
     }
+
+
+    @ApiOperation("搜索学生已选课程")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "searchKey", value = "搜索关键字"),
+            @ApiImplicitParam(name = "pageNo", value = "页码"),
+            @ApiImplicitParam(name = "pageSize", value = "数据量 ")
+    })
+    @GetMapping("/searchSelectedCourse")
+    public CommonReturnType searchSelectedCourse(@RequestParam String searchKey,
+                                                 @RequestParam Integer pageNo,
+                                                 @RequestParam Integer pageSize) throws BusinessException {
+        Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
+        Map map = courseService.searchSelectedCourse(userId, pageNo, pageSize, searchKey);
+        return CommonReturnType.create(map);
+    }
+
+    @ApiOperation("搜索学生可选课程")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "searchKey", value = "搜索关键字"),
+            @ApiImplicitParam(name = "pageNo", value = "页码"),
+            @ApiImplicitParam(name = "pageSize", value = "数据量 ")
+    })
+    @GetMapping("/searchOptionalCourseList")
+    public CommonReturnType searchOptionalCourseList(@RequestParam String searchKey,
+                                                     @RequestParam Integer pageNo,
+                                                     @RequestParam Integer pageSize) throws BusinessException {
+        Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
+        Map map = courseService.searchOptionalCourseList(pageNo, pageSize, userId, searchKey);
+        return CommonReturnType.create(map);
+    }
+
+    @ApiOperation("搜索课时")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "searchKey", value = "搜索关键字"),
+            @ApiImplicitParam(name = "pageNo", value = "页码"),
+            @ApiImplicitParam(name = "pageSize", value = "数据量 ")
+    })
+    @GetMapping("/searchMyWork")
+    public CommonReturnType searchMyWork(@RequestParam String searchKey,
+                                         @RequestParam Integer pageNo,
+                                         @RequestParam Integer pageSize) throws BusinessException {
+        Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
+        Map map = courseService.searchMyWork(userId, searchKey, pageNo, pageSize);
+        return CommonReturnType.create(map);
+    }
+
+    @ApiOperation("获取教师文件列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "folderId", value = "文件夹ID"),
+            @ApiImplicitParam(name = "teacherId", value = "教师ID")
+    })
+    @GetMapping("/getTeacherFileList")
+    public CommonReturnType getTeacherFileList(@RequestParam Integer folderId,
+                                               @RequestParam Integer teacherId) throws BusinessException {
+        List<FileVO> files = fileService.getFilesUnderFolderId(folderId, teacherId);
+        return CommonReturnType.create(files);
+    }
+
+    @ApiOperation("下载教师课件")
+    @GetMapping("/downloadFile")
+    public ResponseEntity<Resource> downloadFile(@RequestParam Integer teacherId,
+                                                 @RequestParam String path) throws BusinessException {
+        path = teacherId + "/" + path;
+        return FileUtil.getFile(path);
+
+    }
+
+
 }

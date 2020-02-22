@@ -34,4 +34,6 @@ public interface WorkDOMapper {
 
     void deleteWork(@Param("userId") Integer userId, @Param("workId") Integer workId);
 
+    List<WorkVO> searchMyWork(@Param("userId") Integer userId, @Param("searchKey") String searchKey);
+
 }

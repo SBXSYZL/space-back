@@ -3,6 +3,7 @@ package com.project.demo.dao;
 import com.project.demo.DO.CourseDO;
 import com.project.demo.VO.CourseVO;
 import com.project.demo.VO.StuCourseVO;
+import com.project.demo.VO.WorkVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -34,7 +35,12 @@ public interface CourseDOMapper {
 
     List<StuCourseVO> getSelectedCourseList(@Param("userId") Integer userId);
 
-    List<CourseVO> getOptionalCourseList(@Param("userId") Integer userId);
+    List<StuCourseVO> searchSelectedCourse(@Param("userId") Integer userId, @Param("searchKey") String searchKey);
 
-    List<CourseVO> getWorkOfCourse(@Param("userId") Integer userId);
+    List<StuCourseVO> getOptionalCourseList(@Param("userId") Integer userId);
+
+    List<WorkVO> getWorkOfCourse(@Param("userId") Integer userId);
+
+    List<StuCourseVO> searchOptionalCourseList(@Param("userId") Integer userId, @Param("searchKey") String searchKey);
+
 }

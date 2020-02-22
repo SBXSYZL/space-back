@@ -165,6 +165,18 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public Map searchSelectedCourse(Integer userId, Integer pageNo, Integer pageSize, String searchKey) throws BusinessException {
+        try {
+            Page page = PageHelper.startPage(pageNo, pageSize);
+            List<StuCourseVO> stuCourseVOS = courseDOMapper.searchSelectedCourse(userId, searchKey);
+            return PageUtil.getListWithPageInfo(stuCourseVOS, page);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(EmBusinessErr.SEARCH_COURSE_ERROR);
+        }
+    }
+
+    @Override
     public ScoreVO getCourseScore(Integer userId, Integer courseId) throws BusinessException {
         try {
             return electiveDOMapper.getCourseScore(userId, courseId);
@@ -188,7 +200,7 @@ public class CourseServiceImpl implements CourseService {
     public Map getOptionalCourseList(Integer pageNo, Integer pageSize, Integer userId) throws BusinessException {
         try {
             Page page = PageHelper.startPage(pageNo, pageSize);
-            List<CourseVO> optionalCourseList = courseDOMapper.getOptionalCourseList(userId);
+            List<StuCourseVO> optionalCourseList = courseDOMapper.getOptionalCourseList(userId);
             return PageUtil.getListWithPageInfo(optionalCourseList, page);
         } catch (Exception e) {
             e.printStackTrace();
@@ -197,10 +209,22 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public Map searchOptionalCourseList(Integer pageNo, Integer pageSize, Integer userId, String searchKey) throws BusinessException {
+        try {
+            Page page = PageHelper.startPage(pageNo, pageSize);
+            List<StuCourseVO> stuCourseVOS = courseDOMapper.searchOptionalCourseList(userId, searchKey);
+            return PageUtil.getListWithPageInfo(stuCourseVOS, page);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(EmBusinessErr.SEARCH_COURSE_ERROR);
+        }
+    }
+
+    @Override
     public Map getWorkOfCourse(Integer userId, Integer pageNo, Integer pageSize) throws BusinessException {
         try {
             Page page = PageHelper.startPage(pageNo, pageSize);
-            List<CourseVO> workOfCourse = courseDOMapper.getWorkOfCourse(userId);
+            List<WorkVO> workOfCourse = courseDOMapper.getWorkOfCourse(userId);
             return PageUtil.getListWithPageInfo(workOfCourse, page);
         } catch (Exception e) {
             e.printStackTrace();
@@ -239,6 +263,18 @@ public class CourseServiceImpl implements CourseService {
         } catch (Exception e) {
             e.printStackTrace();
             throw new BusinessException(EmBusinessErr.DELETE_WORK_ERROR);
+        }
+    }
+
+    @Override
+    public Map searchMyWork(Integer userId, String searchKey, Integer pageNo, Integer pageSize) throws BusinessException {
+        try {
+            Page page = PageHelper.startPage(pageNo, pageSize);
+            List<WorkVO> workVOS = workDOMapper.searchMyWork(userId, searchKey);
+            return PageUtil.getListWithPageInfo(workVOS, page);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(EmBusinessErr.SEARCH_WORK_ERROR);
         }
     }
 }
