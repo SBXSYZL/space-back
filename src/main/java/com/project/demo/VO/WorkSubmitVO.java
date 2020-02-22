@@ -12,6 +12,8 @@ public class WorkSubmitVO {
 
     private Integer userId;
 
+    private Integer workId;
+
     private String userName;
 
     private Byte submitStatus;
@@ -34,6 +36,14 @@ public class WorkSubmitVO {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public Integer getWorkId() {
+        return workId;
+    }
+
+    public void setWorkId(Integer workId) {
+        this.workId = workId;
     }
 
     public String getUserName() {
