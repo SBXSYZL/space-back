@@ -115,4 +115,14 @@ public class StudentServiceImpl implements StudentService {
             throw new BusinessException(EmBusinessErr.POST_MSG_ERROR);
         }
     }
+
+    @Override
+    public void modifyPass(Integer userId, String oldPass, String newPass) throws BusinessException {
+        try {
+            userDOMapper.modifyPass(userId, MD5Util.getMD5(oldPass), MD5Util.getMD5(newPass));
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(EmBusinessErr.USER_PSD_MODIFY_ERROR);
+        }
+    }
 }

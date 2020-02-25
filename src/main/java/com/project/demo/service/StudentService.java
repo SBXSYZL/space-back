@@ -23,4 +23,6 @@ public interface StudentService {
     Map searchUsers(String searchKey, Integer pageNo, Integer pageSize) throws BusinessException;
 
     void readMsg(Integer parentId) throws BusinessException;
+
+    void modifyPass(Integer userId, String oldPass, String newPass) throws BusinessException;
 }

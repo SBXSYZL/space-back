@@ -179,4 +179,29 @@ public class TeacherServiceImpl implements TeacherService {
             throw new BusinessException(EmBusinessErr.POST_MSG_ERROR);
         }
     }
+
+    @Override
+    public UserVO getInfo(Integer userId) throws BusinessException {
+        try {
+            return userDOMapper.getInfo(userId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(EmBusinessErr.GET_INFO_ERROR);
+        }
+    }
+
+    @Override
+    public void modifyPass(Integer userId, String oldPass, String newPass) throws BusinessException {
+        try {
+            String oldPassMd5 = MD5Util.getMD5(oldPass);
+            UserDO userDO = userDOMapper.selectByPrimaryKey(userId);
+            if (!userDO.getPassword().equals(oldPassMd5)) {
+                throw new BusinessException(EmBusinessErr.USER_PSD_MODIFY_ERROR);
+            }
+            userDOMapper.modifyPass(userId, oldPassMd5, MD5Util.getMD5(newPass));
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(EmBusinessErr.USER_PSD_MODIFY_ERROR);
+        }
+    }
 }

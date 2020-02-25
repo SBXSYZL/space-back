@@ -1,5 +1,6 @@
 package com.project.demo.service;
 
+import com.project.demo.VO.UserVO;
 import com.project.demo.error.BusinessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,4 +27,8 @@ public interface TeacherService {
     Map searchUsers(String searchKey, Integer pageNo, Integer pageSize) throws BusinessException;
 
     void readMsg(Integer parentId) throws BusinessException;
+
+    void modifyPass(Integer userId, String oldPass, String newPass) throws BusinessException;
+
+    UserVO getInfo(Integer userId) throws BusinessException;
 }

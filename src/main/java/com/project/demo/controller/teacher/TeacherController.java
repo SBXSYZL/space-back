@@ -1,6 +1,7 @@
 package com.project.demo.controller.teacher;
 
 import com.project.demo.VO.FileVO;
+import com.project.demo.VO.UserVO;
 import com.project.demo.controller.BaseController;
 import com.project.demo.error.BusinessException;
 import com.project.demo.error.EmBusinessErr;
@@ -80,6 +81,22 @@ public class TeacherController extends BaseController {
         return CommonReturnType.create(s);
     }
 
+    @ApiOperation("获取教师信息")
+    @GetMapping("/getInfo")
+    public CommonReturnType getInfo() throws BusinessException {
+        Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
+        UserVO info = teacherService.getInfo(userId);
+        return CommonReturnType.create(info);
+    }
+
+    @ApiOperation("修改账户密码")
+    @PostMapping("/modifyPassword")
+    public CommonReturnType modifyPassword(@RequestParam String oldPass,
+                                           @RequestParam String newPass) throws BusinessException {
+        Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
+        teacherService.modifyPass(userId, oldPass, newPass);
+        return CommonReturnType.create(RTStr.SUCCESS);
+    }
 
     @GetMapping("/teacherLogout")
     @ApiOperation("教师登出")

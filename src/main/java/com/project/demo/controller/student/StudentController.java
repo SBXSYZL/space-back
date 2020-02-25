@@ -77,23 +77,14 @@ public class StudentController extends BaseController {
         return CommonReturnType.create(s);
     }
 
-//    @PostMapping("/submitWork")
-//    public CommonReturnType submitWork(@RequestParam("file") MultipartFile file) throws BusinessException {
-//        if (file.isEmpty()) {
-//            throw new BusinessException(EmBusinessErr.FILE_UPLOAD_ERROR);
-//        } else {
-//            String fileName = FileUtil.saveFile(file);
-//            return CommonReturnType.create(fileName + " submit success");
-//        }
-//    }
-//
-//    @GetMapping("/downloadFile")
-//    public ResponseEntity<Resource> downloadFile(@RequestParam String fileName) throws BusinessException {
-//        return FileUtil.getFile(fileName);
-//
-//    }
-
-//    @GetMapping("/delete")
+    @ApiOperation("修改账户密码")
+    @PostMapping("/modifyPassword")
+    public CommonReturnType modifyPassword(@RequestParam String oldPass,
+                                           @RequestParam String newPass) throws BusinessException {
+        Integer userId = (Integer) MySessionUtil.getSession().getAttribute(MySessionUtil.USER_ID);
+        studentService.modifyPass(userId, oldPass, newPass);
+        return CommonReturnType.create(RTStr.SUCCESS);
+    }
 
     @ApiOperation("获取学生已选中课程列表-分页")
     @ApiImplicitParams({

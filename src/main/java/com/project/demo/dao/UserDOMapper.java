@@ -26,4 +26,7 @@ public interface UserDOMapper {
     List<UserVO> searchUser(@Param("searchKey") String searchKey);
 
     UserVO getInfo(@Param("userId") Integer userId);
+
+    void modifyPass(@Param("userId") Integer userId, @Param("oldPass") String oldPass, @Param("newPass") String newPass);
+
 }

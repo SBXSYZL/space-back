@@ -120,4 +120,9 @@
         from user
         where user_id=#{userId,jdbcType=INTEGER}
     </select>
+    <update id="modifyPass">
+        update user
+        set password=#{newPass,jdbcType=VARCHAR}
+        where user_id=#{userId,jdbcType=INTEGER} and password=#{oldPass,jdbcType=VARCHAR}
+    </update>
 </mapper>

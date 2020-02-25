@@ -35,6 +35,6 @@ public final class MD5Util {
     }
 
     public static void main(String[] args) throws BusinessException {
-        System.out.println(getMD5("anonymous"));
+        System.out.println(getMD5("123456"));
     }
 }
